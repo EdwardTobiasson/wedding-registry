@@ -97,8 +97,9 @@
     .row { display: flex; gap: 12px; flex-wrap: wrap; }
     .muted { color: var(--muted); }
     .spacer { height: 8px; }
+      /* Sound bar prompt */
+    .soundbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 60; display: none; padding: 10px 14px; border-radius: 999px; font-weight: 700; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #1a1a1a; box-shadow: var(--shadow); border: 0; cursor: pointer; }
   </style>
-  
 </head>
 <body>
   <!--
@@ -222,6 +223,8 @@
     <img alt="Enlarged photo" />
   </div>
 
+  <button id="soundbar" class="soundbar" aria-label="Play music">Tap to play music</button>
+
   <footer>
     <div class="container">Built with love. © <span id="year"></span></div>
   </footer>
@@ -312,10 +315,11 @@
       player.play().catch(() => {});
     }
 
-    renderTracks();
+    renderTracks(); /* keep */
 
     // Music helpers
     let musicStarted = false;
+    const ALLOW_KEY = 'allowMusic';
     function startMusic() {
       if (musicStarted || !PLAYLIST.length) return;
       playIndex(0);
@@ -327,13 +331,30 @@
     }
     // Buttons to start
     const buttons = [document.getElementById('playHero'), document.getElementById('playAuto')].filter(Boolean);
-    buttons.forEach(b => b.addEventListener('click', () => { startMusic(); }));
+    buttons.forEach(b => b.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY, '1'); const sb = document.getElementById('soundbar'); if (sb) sb.style.display='none'; }));
     // Start on first user interaction anywhere
-    function onFirstInteract() { startMusic(); document.removeEventListener('click', onFirstInteract); document.removeEventListener('keydown', onFirstInteract); }
+    function onFirstInteract() { startMusic(); localStorage.setItem(ALLOW_KEY, '1'); document.removeEventListener('click', onFirstInteract); document.removeEventListener('keydown', onFirstInteract); document.removeEventListener('touchstart', onFirstInteract); document.removeEventListener('pointerdown', onFirstInteract); }
     document.addEventListener('click', onFirstInteract, { once: true });
     document.addEventListener('keydown', onFirstInteract, { once: true });
+    document.addEventListener('touchstart', onFirstInteract, { once: true });
+    document.addEventListener('pointerdown', onFirstInteract, { once: true });
     // Show a helpful message if the file cannot be loaded
     player.addEventListener('error', () => { status(`Could not load the audio file at ${player.src}. Check the filename and path.`); });
+
+    // Soft autoplay on returning visits
+    function softAutoStart() {
+      if (localStorage.getItem(ALLOW_KEY)) {
+        setTimeout(() => { startMusic(); }, 150);
+      } else {
+        const sb = document.getElementById('soundbar');
+        if (sb) sb.style.display = 'inline-flex';
+      }
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', softAutoStart); else softAutoStart();
+
+    // Soundbar button
+    const sb = document.getElementById('soundbar');
+    if (sb) sb.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY,'1'); sb.style.display='none'; }); });
 
     /* Year */
     document.getElementById('year').textContent = new Date().getFullYear().textContent = new Date().getFullYear();
