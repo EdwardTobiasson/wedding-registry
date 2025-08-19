@@ -139,6 +139,7 @@
     <div class="row" role="group" aria-label="Primary actions">
       <a id="venmoBtn" class="cta primary" target="_blank" rel="noopener">Open Registry</a>
       <a href="#gallery" class="cta secondary">View Photos</a>
+      <a id="playHero" href="#music" class="cta secondary">Play music</a>
     </div>
   </main>
 
@@ -183,8 +184,9 @@
       <div class="card" style="padding: 18px;">
         <h2>Music</h2>
         <p class="lead">A few songs that feel like us. Click a track to play.</p>
-        <audio id="player" preload="metadata" controls autoplay playsinline style="width: 100%; margin: 8px 0 10px;"></audio>
-        <button id="playAuto" class="cta secondary" style="display:none; margin-top: 6px;">Play music</button>
+        <audio id="player" preload="metadata" controls playsinline style="width: 100%; margin: 8px 0 10px;"></audio>
+        <button id="playAuto" class="cta secondary" style="margin-top: 6px;">Play music</button>
+        <p id="audioStatus" class="muted" style="margin-top: 6px;"></p>
         <ul id="tracklist" class="tracklist" aria-label="Playlist"></ul>
       </div>
       <div class="card" style="padding: 18px;">
@@ -314,29 +316,29 @@
 
     renderTracks();
 
-    // Try to autoplay on load. Some browsers block this until the first tap.
-    const autoBtn = document.getElementById('playAuto');
-    function tryAutoplay() {
-      if (!PLAYLIST.length) return;
+    // Music helpers
+    let musicStarted = false;
+    function startMusic() {
+      if (musicStarted || !PLAYLIST.length) return;
       playIndex(0);
-      player.autoplay = true;
-      player.play().then(()=>{}).catch(()=>{ if (autoBtn) autoBtn.style.display = 'inline-flex'; });
+      player.play().then(() => { musicStarted = true; status(""); }).catch(() => { status("Press Play to start music"); });
     }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', tryAutoplay);
-    } else {
-      tryAutoplay();
+    function status(msg) {
+      const el = document.getElementById('audioStatus');
+      if (el) el.textContent = msg || '';
     }
-    if (autoBtn) {
-      autoBtn.addEventListener('click', () => {
-        playIndex(0);
-        player.play().catch(()=>{});
-        autoBtn.style.display = 'none';
-      });
-    }
+    // Buttons to start
+    const buttons = [document.getElementById('playHero'), document.getElementById('playAuto')].filter(Boolean);
+    buttons.forEach(b => b.addEventListener('click', () => { startMusic(); }));
+    // Start on first user interaction anywhere
+    function onFirstInteract() { startMusic(); document.removeEventListener('click', onFirstInteract); document.removeEventListener('keydown', onFirstInteract); }
+    document.addEventListener('click', onFirstInteract, { once: true });
+    document.addEventListener('keydown', onFirstInteract, { once: true });
+    // Show a helpful message if the file cannot be loaded
+    player.addEventListener('error', () => { status(`Could not load the audio file at ${player.src}. Check the filename and path.`); });
 
     /* Year */
-    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('year').textContent = new Date().getFullYear().textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
