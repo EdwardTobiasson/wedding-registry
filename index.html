@@ -97,6 +97,8 @@
     .row { display: flex; gap: 12px; flex-wrap: wrap; }
     .muted { color: var(--muted); }
     .spacer { height: 8px; }
+    .badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .badge { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: rgba(0,0,0,.06); color: var(--text); font-weight: 700; font-size: 12px; }
       /* Sound bar prompt */
     .soundbar { position: fixed; left: 50%; transform: translateX(-50%); top: 72px; z-index: 60; display: none; padding: 10px 14px; border-radius: 999px; font-weight: 700; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #1a1a1a; box-shadow: var(--shadow); border: 0; cursor: pointer; }
   </style>
@@ -126,17 +128,19 @@
       <div class="brand">Edward & Caroline <span class="pill">October 8th, 2025</span></div>
       <nav class="row" aria-label="Primary">
         <a href="#home">Home</a>
+        <a href="#story">Story</a>
+        <a href="#music">Music</a>
         <a href="#gallery">Photos</a>
         <a href="#registry">Registry</a>
-        <a href="#music">Music</a>
         <a href="#details">Details</a>
       </nav>
     </div>
   </header>
 
   <main id="home" class="hero container">
-    <h1>We are getting married</h1>
-    <p class="muted">Thank you for celebrating with us. Your presence is the best gift. If you would like to contribute to our next chapter, our registry is a simple tip jar.</p>
+    <h1>We are getting married!</h1>
+    <p class="muted">About time, huh We have been together since 2013. Thank you for celebrating with us. Your presence is the best gift.</p>
+    <p class="muted" id="sinceLine">That is <strong><span id="sinceCount"></span></strong> and counting.</p>
     <div class="row" role="group" aria-label="Primary actions">
       <a id="venmoBtn" class="cta primary" target="_blank" rel="noopener">Open Registry</a>
       <a href="#gallery" class="cta secondary">View Photos</a>
@@ -154,6 +158,14 @@
         <p id="audioStatus" class="muted" style="margin-top: 6px;"></p>
         <ul id="tracklist" class="tracklist" aria-label="Playlist"></ul>
       </div>
+    </div>
+  </section>
+
+  <section id="story">
+    <div class="container card" style="padding: 18px;">
+      <h2>Our story</h2>
+      <p class="lead">We met, we laughed, we kept laughing. We have been together since 2013. That is <strong><span id="sinceCount2"></span></strong>.</p>
+      <p>We like to keep things simple and full of good energy. Expect smiles.</p>
     </div>
   </section>
 
@@ -177,10 +189,10 @@
     <div class="container registry">
       <div class="card box">
         <h2>Registry</h2>
-        <p class="lead">We are keeping it simple. If you would like to gift, Venmo works great.</p>
+        <p class="lead">We are not asking for gifts. If you would like to donate for our honeymoon, we would be grateful.</p>
         <div class="row">
-          <a id="venmoLink1" class="cta primary" target="_blank" rel="noopener">Send via Venmo</a>
-          <a id="venmoLink2" class="cta secondary" target="_blank" rel="noopener">Open profile</a>
+          <a id="venmoLink1" class="cta primary" target="_blank" rel="noopener">Contribute to honeymoon</a>
+          <a id="venmoLink2" class="cta secondary" target="_blank" rel="noopener">Open Venmo profile</a>
         </div>
         <div class="spacer"></div>
         <p class="muted">Thank you for the love and support.</p>
@@ -349,6 +361,27 @@
     // Soundbar button
     const sb = document.getElementById('soundbar');
     if (sb) sb.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY,'1'); sb.style.display='none'; }); });
+
+    /* Since counter */
+    const RELATIONSHIP_START = '2013-01-01'; // change if you have the exact date
+    function diffYMD(start, end) {
+      let y = end.getFullYear() - start.getFullYear();
+      let m = end.getMonth() - start.getMonth();
+      let d = end.getDate() - start.getDate();
+      if (d < 0) { m -= 1; const pm = new Date(end.getFullYear(), end.getMonth(), 0); d += pm.getDate(); }
+      if (m < 0) { y -= 1; m += 12; }
+      return { y, m, d };
+    }
+    function updateSince(){
+      const start = new Date(RELATIONSHIP_START);
+      if (isNaN(start)) return;
+      const now = new Date();
+      const {y,m,d} = diffYMD(start, now);
+      const txt = `${y} years, ${m} months, ${d} days`;
+      const a = document.getElementById('sinceCount'); if (a) a.textContent = txt;
+      const b = document.getElementById('sinceCount2'); if (b) b.textContent = txt;
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updateSince); else updateSince();
 
     /* Year */
     document.getElementById('year').textContent = new Date().getFullYear();
