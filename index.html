@@ -139,12 +139,18 @@
 
   <main id="home" class="hero container">
     <h1>We are getting married!</h1>
-    <p class="muted">About time, huh We have been together since 2012, and we are getting married on our 13-year anniversary. We are getting married on our 13-year anniversary. Thank you for celebrating with us. Your presence is the best gift.</p>
-    <p class="muted" id="sinceLine">That is <strong><span id="sinceCount"></span></strong> and counting.</p>
+    <p class="muted">About time, huh We started dating in 2012 and never stopped collecting inside jokes. On October 8th, 2025 we are making it official on our 13 year anniversary.</p>
+    
     <div class="row" role="group" aria-label="Primary actions">
       <a id="venmoBtn" class="cta primary" target="_blank" rel="noopener">Open Registry</a>
-      <a href="#gallery" class="cta secondary">View Photos</a>
+      <a href="#story" class="cta secondary">Our story</a>
       <a id="playHero" href="#music" class="cta secondary">Play music</a>
+    </div>
+    <div class="badges" aria-label="Fun facts">
+      <span class="badge">Charlotte NC</span>
+      <span class="badge">Bad joke enjoyers</span>
+      <span class="badge">Coffee level: essential</span>
+      <span class="badge">Song: Yellow on repeat</span>
     </div>
   </main>
 
@@ -164,8 +170,8 @@
   <section id="story">
     <div class="container card" style="padding: 18px;">
       <h2>Our story</h2>
-      <p class="lead">We met, we laughed, we kept laughing. We have been together since 2012, and we are getting married on our 13-year anniversary. That is <strong><span id="sinceCount2"></span></strong>.</p>
-      <p>We like to keep things simple and full of good energy. Expect smiles.</p>
+      <p class="lead">We met, we laughed, and somehow memorized each other's coffee orders. Thirteen years later we are still laughing, so we decided to upgrade to Married Mode on our anniversary.</p>
+      <p>We like simple plans, big smiles, and friends who laugh at our puns even when they should not. Thanks for being here.</p>
     </div>
   </section>
 
@@ -346,27 +352,6 @@
     // Soundbar button
     const sb = document.getElementById('soundbar');
     if (sb) sb.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY,'1'); sb.style.display='none'; }); });
-
-    /* Since counter */
-    const RELATIONSHIP_START = '2012-10-08'; // change if you have the exact date
-    function diffYMD(start, end) {
-      let y = end.getFullYear() - start.getFullYear();
-      let m = end.getMonth() - start.getMonth();
-      let d = end.getDate() - start.getDate();
-      if (d < 0) { m -= 1; const pm = new Date(end.getFullYear(), end.getMonth(), 0); d += pm.getDate(); }
-      if (m < 0) { y -= 1; m += 12; }
-      return { y, m, d };
-    }
-    function updateSince(){
-      const start = new Date(RELATIONSHIP_START);
-      if (isNaN(start)) return;
-      const now = new Date();
-      const {y,m,d} = diffYMD(start, now);
-      const txt = `${y} years, ${m} months, ${d} days`;
-      const a = document.getElementById('sinceCount'); if (a) a.textContent = txt;
-      const b = document.getElementById('sinceCount2'); if (b) b.textContent = txt;
-    }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updateSince); else updateSince();
 
     /* Year */
     document.getElementById('year').textContent = new Date().getFullYear();
