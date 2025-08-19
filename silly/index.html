@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>totally normal page</title>
+  <meta name="description" content="Definitely not a silly page. Do not click." />
+  <style>
+    :root{
+      --bg1:#ffecd1; --bg2:#ffd6e0; --bg3:#d0f4de; --bg4:#c9c9ff; --ink:#222; --ink2:#fff;
+      --a1:#ff4d6d; --a2:#f9c74f; --a3:#43aa8b; --a4:#577590; --a5:#f9844a;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--ink);
+      background: linear-gradient(120deg,var(--bg1),var(--bg2),var(--bg3),var(--bg4));
+      background-size: 300% 300%;
+      animation: wash 12s ease-in-out infinite;
+      overflow-x:hidden;
+    }
+    @keyframes wash{ 0%{background-position:0 50%} 50%{background-position:100% 50%} 100%{background-position:0 50%} }
+    .wrap{ min-height:100%; display:grid; place-items:center; padding:40px; }
+    .card{
+      background: rgba(255,255,255,.9);
+      border: 2px solid rgba(0,0,0,.08);
+      border-radius: 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.15);
+      padding: 28px; text-align:center; max-width: 720px; width: min(92%, 720px);
+      position: relative; overflow:hidden;
+    }
+    h1{font-size:clamp(28px,6vw,56px); margin:0 0 6px}
+    p.lead{margin:0 0 18px; color:#444}
+    .nose{ width:120px; height:120px; border-radius:999px; background: radial-gradient(circle at 40% 35%, #ff9aa2, #ff1654 60%);
+      margin:12px auto; box-shadow: inset 0 -10px 20px rgba(0,0,0,.15), 0 10px 30px rgba(0,0,0,.2);
+      animation: bob 2.4s ease-in-out infinite; cursor:pointer; }
+    @keyframes bob { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-6px) } }
+    .btn{
+      display:inline-block; padding:14px 18px; border-radius:14px; font-weight:800; letter-spacing:.3px;
+      background: linear-gradient(135deg,var(--a1),var(--a2)); color:var(--ink2); text-decoration:none; border:0; cursor:pointer;
+      box-shadow: 0 14px 30px rgba(0,0,0,.18);
+    }
+    .btn:active{ transform: translateY(1px) }
+    .row{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+    .tiny{font-size:12px; color:#555; text-decoration:underline}
+    canvas{ position:fixed; inset:0; pointer-events:none }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="wrap">
+    <div class="card">
+      <h1>Welcome to the not secret page</h1>
+      <p class="lead">Absolutely ordinary page. Nothing silly at all. Please do not press the nose.</p>
+      <div id="nose" class="nose" title="Definitely not a button"></div>
+      <div class="row">
+        <button id="honk" class="btn">Honk</button>
+        <a href="../" class="tiny">back to the nice site</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Confetti
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let W, H; function size(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight } size(); addEventListener('resize', size);
+    const pieces = Array.from({length: 120}).map(()=>({ x: Math.random()*W, y: Math.random()*H, r: 6+Math.random()*10, vx: -1+Math.random()*2, vy: .8+Math.random()*1.5, c: `hsl(${Math.random()*360},85%,65%)`, a: Math.random()*Math.PI }));
+    function tick(){ ctx.clearRect(0,0,W,H); pieces.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.a+=.06; if(p.y>H+20){ p.y=-20; p.x=Math.random()*W } ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillStyle=p.c; ctx.fillRect(-p.r*.6,-p.r*.3,p.r,p.r*.6); ctx.restore(); }); requestAnimationFrame(tick); }
+    tick();
+
+    // WebAudio honk (two detuned oscillators through a filter)
+    let ac; function audio(){ if(!ac){ ac = new (window.AudioContext||window.webkitAudioContext)(); } return ac; }
+    function honk(){
+      const A = audio();
+      const now = A.currentTime;
+      const g = A.createGain(); g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.5, now+.02); g.gain.exponentialRampToValueAtTime(0.0001, now+.45);
+      const lp = A.createBiquadFilter(); lp.type='bandpass'; lp.frequency.value = 600; lp.Q.value = 6;
+      const o1 = A.createOscillator(); o1.type='square'; o1.frequency.value = 440; o1.detune.value = -30;
+      const o2 = A.createOscillator(); o2.type='square'; o2.frequency.value = 440; o2.detune.value = 30;
+      o1.connect(lp); o2.connect(lp); lp.connect(g); g.connect(A.destination);
+      o1.start(now); o2.start(now); o1.stop(now+.5); o2.stop(now+.5);
+    }
+
+    function spin(){ document.querySelector('.card').animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:700, easing:'ease-in-out'}); }
+
+    document.getElementById('honk').addEventListener('click', ()=>{ honk(); spin(); });
+    document.getElementById('nose').addEventListener('click', ()=>{ honk(); spin(); });
+    document.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='h'){ honk(); spin(); } });
+  </script>
+</body>
+</html>
