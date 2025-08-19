@@ -144,6 +144,19 @@
     </div>
   </main>
 
+  <section id="music">
+    <div class="container music">
+      <div class="card" style="padding: 18px;">
+        <h2>Music</h2>
+        <p class="lead">A few songs that feel like us. Click a track to play.</p>
+        <audio id="player" preload="metadata" controls playsinline style="width: 100%; margin: 8px 0 10px;"></audio>
+        <button id="playAuto" class="cta secondary" style="margin-top: 6px;">Play music</button>
+        <p id="audioStatus" class="muted" style="margin-top: 6px;"></p>
+        <ul id="tracklist" class="tracklist" aria-label="Playlist"></ul>
+      </div>
+    </div>
+  </section>
+
   <section id="gallery">
     <div class="container">
       <h2>Photos</h2>
@@ -182,19 +195,7 @@
     </div>
   </section>
 
-  <section id="music">
-    <div class="container music">
-      <div class="card" style="padding: 18px;">
-        <h2>Music</h2>
-        <p class="lead">A few songs that feel like us. Click a track to play.</p>
-        <audio id="player" preload="metadata" controls playsinline style="width: 100%; margin: 8px 0 10px;"></audio>
-        <button id="playAuto" class="cta secondary" style="margin-top: 6px;">Play music</button>
-        <p id="audioStatus" class="muted" style="margin-top: 6px;"></p>
-        <ul id="tracklist" class="tracklist" aria-label="Playlist"></ul>
-      </div>
-      
-    </div>
-  </section>
+  
 
   <section id="details">
     <div class="container card" style="padding: 18px;">
@@ -207,7 +208,7 @@
         </div>
         <div style="flex: 1; min-width: 220px;">
           <h3 style="margin: 8px 0 6px;">Where</h3>
-          <p>Venue name, City and State</p>
+          <p>Charlotte, North Carolina</p>
         </div>
       </div>
     </div>
@@ -260,7 +261,6 @@
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
-    });
 
     /* Lightbox for gallery */
     const lightbox = document.getElementById('lightbox');
@@ -351,7 +351,7 @@
     if (sb) sb.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY,'1'); sb.style.display='none'; }); });
 
     /* Year */
-    document.getElementById('year').textContent = new Date().getFullYear().textContent = new Date().getFullYear();
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
