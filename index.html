@@ -123,7 +123,12 @@
     /* Button shimmer */
     .cta { position: relative; overflow: hidden; }
     .cta.primary::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 80%); transform: skewX(-20deg) translateX(-120%); transition: transform .6s; }
-    .cta.primary:hover::after { transform: skew
+    .cta.primary:hover::after { transform: skewX(-20deg) translateX(120%); }
+
+    /* Gallery hover */
+    .gallery-grid img { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
+    .gallery-grid img:hover { transform: scale(1.02); box-shadow: var(--shadow); }
+</style>
 </head>
 <body>
   <!--
@@ -384,6 +389,13 @@
       let t = 0; function tick(){ ctx.clearRect(0,0,c.width,c.height); pieces.forEach(p=>{ p.vy += p.g; p.x += p.vx; p.y += p.vy; p.a += .08; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillStyle=p.c; ctx.fillRect(-p.r*.6,-p.r*.3,p.r,p.r*.6); ctx.restore(); }); if((t+=16)<900) requestAnimationFrame(tick); else c.remove(); } tick();
     }
     ['venmoBtn','venmoLink1'].forEach(id=>{ const el = document.getElementById(id); if(el){ el.addEventListener('click', e=>{ const r = el.getBoundingClientRect(); confettiBurst(r.left+r.width/2, r.top+r.height/2); }); }});
-  </script>
+    // Scroll reveal observer
+  (function(){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('[data-reveal]').forEach(el=> io.observe(el));
+  })();
+</script>
 </body>
 </html>
