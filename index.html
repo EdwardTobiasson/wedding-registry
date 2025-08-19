@@ -62,7 +62,7 @@
 
     /* Gallery */
     .gallery-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
-    .gallery-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; cursor: zoom-in; border: 1px solid rgba(0,0,0,.08); }
+    .gallery-grid img { width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 12px; cursor: zoom-in; border: 1px solid rgba(0,0,0,.08); aspect-ratio: 4 / 3; max-height: 420px; }
     .col-6 { grid-column: span 6; }
     .col-4 { grid-column: span 4; }
     .col-8 { grid-column: span 8; }
@@ -108,7 +108,7 @@
     1. Set your Venmo handle below in the script: const VENMO_HANDLE = "yourhandle".
        That will wire the big button and the small links to https://venmo.com/u/yourhandle
     2. Replace gallery image sources with your actual files placed in ./assets/photos
-    3. Replace the optional QR image at ./assets/venmo-qr.png
+    3. Replace the optional QR image at ./assets/venmo-qr.jpg
        You can export a QR from the Venmo app and drop it in the assets folder
     4. Put your audio files in ./assets/music and update the playlist array in the script
     5. Update names, date, and any copy in the HTML
@@ -117,12 +117,12 @@
     /index.html
     /assets/photos/your-photos.jpg
     /assets/music/track1.mp3
-    /assets/venmo-qr.png
+    /assets/venmo-qr.jpg
   -->
 
   <header class="nav">
     <div class="container nav-inner">
-      <div class="brand">Alex & Jordan <span class="pill">September 20, 2025</span></div>
+      <div class="brand">Edward & Caroline <span class="pill">October 8th, 2025</span></div>
       <nav class="row" aria-label="Primary">
         <a href="#home">Home</a>
         <a href="#gallery">Photos</a>
@@ -147,11 +147,11 @@
       <h2>Photos</h2>
       <p class="lead">A few moments we love. Send more and we will add them.</p>
       <div class="gallery-grid">
-        <img class="col-8" src="assets/photos/edward-1.jpg" alt="By the stone bridge">
-        <img class="col-4" src="assets/photos/edward-2.jpg" alt="Looking over the bridge">
-        <img class="col-4" src="assets/photos/edward-3.jpg" alt="By the fountain">
-        <img class="col-4" src="assets/photos/edward-4.jpg" alt="By the lake">
-        <img class="col-8" src="assets/photos/edward-5.jpg" alt="Close by the water">
+        <img loading="lazy" class="col-8" src="assets/photos/edward-1.jpg" alt="By the stone bridge">
+        <img loading="lazy" class="col-4" src="assets/photos/edward-2.jpg" alt="Looking over the bridge">
+        <img loading="lazy" class="col-4" src="assets/photos/edward-3.jpg" alt="By the fountain">
+        <img loading="lazy" class="col-4" src="assets/photos/edward-4.jpg" alt="By the lake">
+        <img loading="lazy" class="col-8" src="assets/photos/edward-5.jpg" alt="Close by the water">
       </div>
     </div>
   </section>
@@ -171,7 +171,7 @@
       <div class="card qr">
         <p class="muted">Prefer scanning a code</p>
         <a id="venmoQRLink" href="https://venmo.com/code?user_id=2634431999246336599&created=1755619353" target="_blank" rel="noopener">
-          <img src="assets/venmo-qr.png" alt="Venmo QR code for Edward Tobiasson" />
+          <img src="assets/venmo-qr.jpg" alt="Venmo QR code for Edward Tobiasson" />
         </a>
         <p class="muted" style="margin-top: 8px;">Tap the QR to open Venmo</p>
       </div>
@@ -183,7 +183,8 @@
       <div class="card" style="padding: 18px;">
         <h2>Music</h2>
         <p class="lead">A few songs that feel like us. Click a track to play.</p>
-        <audio id="player" preload="metadata" controls style="width: 100%; margin: 8px 0 10px;"></audio>
+        <audio id="player" preload="metadata" controls autoplay playsinline style="width: 100%; margin: 8px 0 10px;"></audio>
+        <button id="playAuto" class="cta secondary" style="display:none; margin-top: 6px;">Play music</button>
         <ul id="tracklist" class="tracklist" aria-label="Playlist"></ul>
       </div>
       <div class="card" style="padding: 18px;">
@@ -205,7 +206,7 @@
       <div class="row">
         <div style="flex: 1; min-width: 220px;">
           <h3 style="margin: 8px 0 6px;">When</h3>
-          <p>Saturday, September 20, 2025</p>
+          <p>Wednesday, October 8th, 2025</p>
         </div>
         <div style="flex: 1; min-width: 220px;">
           <h3 style="margin: 8px 0 6px;">Where</h3>
@@ -312,6 +313,27 @@
     }
 
     renderTracks();
+
+    // Try to autoplay on load. Some browsers block this until the first tap.
+    const autoBtn = document.getElementById('playAuto');
+    function tryAutoplay() {
+      if (!PLAYLIST.length) return;
+      playIndex(0);
+      player.autoplay = true;
+      player.play().then(()=>{}).catch(()=>{ if (autoBtn) autoBtn.style.display = 'inline-flex'; });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', tryAutoplay);
+    } else {
+      tryAutoplay();
+    }
+    if (autoBtn) {
+      autoBtn.addEventListener('click', () => {
+        playIndex(0);
+        player.play().catch(()=>{});
+        autoBtn.style.display = 'none';
+      });
+    }
 
     /* Year */
     document.getElementById('year').textContent = new Date().getFullYear();
