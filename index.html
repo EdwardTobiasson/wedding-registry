@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Our Wedding Registry</title>
+  <meta name="description" content="A simple wedding site with photos, music, and a direct link to our registry via Venmo." />
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #667085;
+      --accent1: #EDCD4F;
+      --accent2: #49C0B3;
+      --accent3: #8FB26F;
+      --radius: 16px;
+      --shadow: 0 20px 40px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+      color: var(--text);
+      background: radial-gradient(1100px 700px at 10% -20%, rgba(237,205,79,.25), transparent 60%),
+                  radial-gradient(900px 800px at 90% 10%, rgba(73,192,179,.25), transparent 60%),
+                  var(--bg);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .container { width: min(1100px, 92%); margin: 0 auto; }
+
+    /* Top nav */
+    .nav {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,.85);
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+    .brand { font-weight: 700; letter-spacing: .3px; }
+    .brand .pill { font-size: 12px; margin-left: 8px; padding: 4px 8px; border-radius: 999px; background: rgba(0,0,0,.06); color: var(--muted); }
+    .nav a { padding: 8px 10px; border-radius: 8px; color: var(--muted); font-weight: 600; }
+    .nav a:hover { color: var(--text); background: rgba(0,0,0,.06); }
+
+    /* Hero */
+    .hero { position: relative; padding: 96px 0 72px; text-align: center; }
+    .hero h1 { font-size: clamp(32px, 6vw, 60px); line-height: 1.08; margin: 0 0 10px; }
+    .hero p { color: var(--muted); margin: 6px 0 28px; }
+    .cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 14px; font-weight: 700; }
+    .cta.primary { background: linear-gradient(135deg, var(--accent1), var(--accent2)); box-shadow: var(--shadow); }
+    .cta.secondary { background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.10); }
+
+    .card { background: var(--card); border: 1px solid rgba(0,0,0,.08); border-radius: var(--radius); box-shadow: var(--shadow); }
+
+    /* Sections */
+    section { padding: 64px 0; }
+    section h2 { font-size: clamp(22px, 3vw, 30px); margin: 0 0 18px; }
+    section p.lead { color: var(--muted); margin-top: 0; }
+
+    /* Gallery */
+    .gallery-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
+    .gallery-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; cursor: zoom-in; border: 1px solid rgba(0,0,0,.08); }
+    .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 4; }
+    .col-8 { grid-column: span 8; }
+    @media (max-width: 800px) {
+      .col-6, .col-4, .col-8 { grid-column: span 12; }
+    }
+
+    /* Registry */
+    .registry { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; align-items: center; }
+    .registry .box { padding: 18px; }
+    .registry .qr { text-align: center; padding: 18px; }
+    .registry .qr img { max-width: 220px; width: 100%; border-radius: 12px; border: 1px solid rgba(0,0,0,.08); }
+    @media (max-width: 900px) { .registry { grid-template-columns: 1fr; } }
+
+    /* Music */
+    .music { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+    @media (max-width: 900px) { .music { grid-template-columns: 1fr; } }
+    .tracklist { list-style: none; padding: 0; margin: 0; }
+    .tracklist li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 12px; background: rgba(0,0,0,.035); border: 1px solid rgba(0,0,0,.08); margin-bottom: 10px; }
+    .track-controls button { appearance: none; border: 0; padding: 8px 10px; border-radius: 10px; background: rgba(0,0,0,.10); color: var(--text); font-weight: 700; cursor: pointer; }
+    .track-controls button:hover { background: rgba(0,0,0,.09); }
+
+    /* Lightbox */
+    .lightbox { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.7); z-index: 50; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 92vw; max-height: 86vh; border-radius: 12px; box-shadow: var(--shadow); }
+
+    /* Footer */
+    footer { padding: 40px 0 60px; color: var(--muted); text-align: center; }
+
+    /* Utility */
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .muted { color: var(--muted); }
+    .spacer { height: 8px; }
+  </style>
+  
+</head>
+<body>
+  <!--
+    Welcome. This single file site is ready for GitHub Pages.
+
+    What to customize
+    1. Set your Venmo handle below in the script: const VENMO_HANDLE = "yourhandle".
+       That will wire the big button and the small links to https://venmo.com/u/yourhandle
+    2. Replace gallery image sources with your actual files placed in ./assets/photos
+    3. Replace the optional QR image at ./assets/venmo-qr.png
+       You can export a QR from the Venmo app and drop it in the assets folder
+    4. Put your audio files in ./assets/music and update the playlist array in the script
+    5. Update names, date, and any copy in the HTML
+
+    File structure suggestion
+    /index.html
+    /assets/photos/your-photos.jpg
+    /assets/music/track1.mp3
+    /assets/venmo-qr.png
+  -->
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="brand">Alex & Jordan <span class="pill">September 20, 2025</span></div>
+      <nav class="row" aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#gallery">Photos</a>
+        <a href="#registry">Registry</a>
+        <a href="#music">Music</a>
+        <a href="#details">Details</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home" class="hero container">
+    <h1>We are getting married</h1>
+    <p class="muted">Thank you for celebrating with us. Your presence is the best gift. If you would like to contribute to our next chapter, our registry is a simple tip jar.</p>
+    <div class="row" role="group" aria-label="Primary actions">
+      <a id="venmoBtn" class="cta primary" target="_blank" rel="noopener">Open Registry</a>
+      <a href="#gallery" class="cta secondary">View Photos</a>
+    </div>
+  </main>
+
+  <section id="gallery">
+    <div class="container">
+      <h2>Photos</h2>
+      <p class="lead">A few moments we love. Send more and we will add them.</p>
+      <div class="gallery-grid">
+        <img class="col-8" src="assets/photos/edward-1.jpg" alt="By the stone bridge">
+        <img class="col-4" src="assets/photos/edward-2.jpg" alt="Looking over the bridge">
+        <img class="col-4" src="assets/photos/edward-3.jpg" alt="By the fountain">
+        <img class="col-4" src="assets/photos/edward-4.jpg" alt="By the lake">
+        <img class="col-8" src="assets/photos/edward-5.jpg" alt="Close by the water">
+      </div>
+    </div>
+  </section>
+
+  <section id="registry">
+    <div class="container registry">
+      <div class="card box">
+        <h2>Registry</h2>
+        <p class="lead">We are keeping it simple. If you would like to gift, Venmo works great.</p>
+        <div class="row">
+          <a id="venmoLink1" class="cta primary" target="_blank" rel="noopener">Send via Venmo</a>
+          <a id="venmoLink2" class="cta secondary" target="_blank" rel="noopener">Open profile</a>
+        </div>
+        <div class="spacer"></div>
+        <p class="muted">Thank you for the love and support.</p>
+      </div>
+      <div class="card qr">
+        <p class="muted">Prefer scanning a code</p>
+        <a id="venmoQRLink" href="https://venmo.com/code?user_id=2634431999246336599&created=1755619353" target="_blank" rel="noopener">
+          <img src="assets/venmo-qr.png" alt="Venmo QR code for Edward Tobiasson" />
+        </a>
+        <p class="muted" style="margin-top: 8px;">Tap the QR to open Venmo</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="music">
+    <div class="container music">
+      <div class="card" style="padding: 18px;">
+        <h2>Music</h2>
+        <p class="lead">A few songs that feel like us. Click a track to play.</p>
+        <audio id="player" preload="metadata" controls style="width: 100%; margin: 8px 0 10px;"></audio>
+        <ul id="tracklist" class="tracklist" aria-label="Playlist"></ul>
+      </div>
+      <div class="card" style="padding: 18px;">
+        <h2>How to add songs</h2>
+        <ol>
+          <li>Place your MP3 files in <code>/assets/music</code></li>
+          <li>Update the playlist array in the script at the bottom of this file</li>
+          <li>Commit to GitHub and the site will update on GitHub Pages</li>
+        </ol>
+        <p class="muted">Autoplay is often blocked. Press play if your browser asks.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="details">
+    <div class="container card" style="padding: 18px;">
+      <h2>Event details</h2>
+      <p class="lead">Date and venue details go here when you are ready.</p>
+      <div class="row">
+        <div style="flex: 1; min-width: 220px;">
+          <h3 style="margin: 8px 0 6px;">When</h3>
+          <p>Saturday, September 20, 2025</p>
+        </div>
+        <div style="flex: 1; min-width: 220px;">
+          <h3 style="margin: 8px 0 6px;">Where</h3>
+          <p>Venue name, City and State</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <img alt="Enlarged photo" />
+  </div>
+
+  <footer>
+    <div class="container">Built with love. © <span id="year"></span></div>
+  </footer>
+
+  <script>
+    /*
+      Quick settings
+      Replace with your actual Venmo handle. Only the handle, not a full URL.
+      Example: const VENMO_HANDLE = "Edward-Tobiasson";
+    */
+    const VENMO_HANDLE = "Edward-Tobiasson";
+
+    /*
+      Playlist. Add more tracks as needed.
+      Files should be placed in /assets/music
+    */
+    const PLAYLIST = [
+      { title: "First Dance", file: "assets/music/first-dance.mp3", length: "3:24" },
+      { title: "Sunset Drive", file: "assets/music/sunset-drive.mp3", length: "2:58" },
+      { title: "Our Song", file: "assets/music/our-song.mp3", length: "3:11" }
+    ];
+
+    /* Wire up Venmo links */
+    const venmoUrl = VENMO_HANDLE ? `https://venmo.com/u/${VENMO_HANDLE}` : null;
+    const setVenmo = (el) => {
+      if (!el) return;
+      if (venmoUrl) { el.href = venmoUrl; el.textContent = el.textContent || "Open Venmo"; }
+      else { el.href = "#"; el.textContent = "Set your Venmo handle in the script"; el.style.opacity = .8; }
+    };
+    setVenmo(document.getElementById("venmoBtn"));
+    setVenmo(document.getElementById("venmoLink1"));
+    setVenmo(document.getElementById("venmoLink2"));
+
+    /* Smooth scroll for in-page links */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    /* Lightbox for gallery */
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = lightbox.querySelector('img');
+    document.querySelectorAll('#gallery img').forEach(img => {
+      img.addEventListener('click', () => {
+        lbImg.src = img.src;
+        lightbox.classList.add('open');
+      });
+    });
+    lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
+
+    /* Music playlist */
+    const player = document.getElementById('player');
+    const list = document.getElementById('tracklist');
+
+    function renderTracks() {
+      list.innerHTML = '';
+      PLAYLIST.forEach((t, i) => {
+        const li = document.createElement('li');
+        const label = document.createElement('div');
+        label.textContent = `${t.title}`;
+        label.style.fontWeight = '700';
+        const meta = document.createElement('span');
+        meta.textContent = t.length || '';
+        meta.className = 'muted';
+        const controls = document.createElement('div');
+        controls.className = 'track-controls';
+        const btn = document.createElement('button');
+        btn.textContent = 'Play';
+        btn.addEventListener('click', () => playIndex(i));
+        controls.appendChild(btn);
+        li.appendChild(label);
+        li.appendChild(meta);
+        li.appendChild(controls);
+        li.addEventListener('click', (e) => { if (e.target.tagName !== 'BUTTON') playIndex(i); });
+        list.appendChild(li);
+      });
+    }
+
+    function playIndex(i) {
+      const t = PLAYLIST[i];
+      if (!t) return;
+      player.src = t.file;
+      player.play().catch(() => {});
+    }
+
+    renderTracks();
+
+    /* Year */
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
