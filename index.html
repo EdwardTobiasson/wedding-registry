@@ -98,7 +98,7 @@
     .muted { color: var(--muted); }
     .spacer { height: 8px; }
       /* Sound bar prompt */
-    .soundbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 16px; z-index: 60; display: none; padding: 10px 14px; border-radius: 999px; font-weight: 700; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #1a1a1a; box-shadow: var(--shadow); border: 0; cursor: pointer; }
+    .soundbar { position: fixed; left: 50%; transform: translateX(-50%); top: 72px; z-index: 60; display: none; padding: 10px 14px; border-radius: 999px; font-weight: 700; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #1a1a1a; box-shadow: var(--shadow); border: 0; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -154,6 +154,8 @@
         <img loading="lazy" class="col-4" src="assets/photos/edward-3.jpg" alt="By the fountain">
         <img loading="lazy" class="col-4" src="assets/photos/edward-4.jpg" alt="By the lake">
         <img loading="lazy" class="col-8" src="assets/photos/edward-5.jpg" alt="Close by the water">
+        <img loading="lazy" class="col-6" src="assets/photos/edward-6.jpg" alt="Engagement photo">
+        <img loading="lazy" class="col-6" src="assets/photos/edward-7.jpg" alt="Engagement photo">
       </div>
     </div>
   </section>
@@ -190,15 +192,7 @@
         <p id="audioStatus" class="muted" style="margin-top: 6px;"></p>
         <ul id="tracklist" class="tracklist" aria-label="Playlist"></ul>
       </div>
-      <div class="card" style="padding: 18px;">
-        <h2>How to add songs</h2>
-        <ol>
-          <li>Place your MP3 files in <code>/assets/music</code></li>
-          <li>Update the playlist array in the script at the bottom of this file</li>
-          <li>Commit to GitHub and the site will update on GitHub Pages</li>
-        </ol>
-        <p class="muted">Autoplay is often blocked. Press play if your browser asks.</p>
-      </div>
+      
     </div>
   </section>
 
