@@ -105,7 +105,25 @@
     .badge { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: rgba(0,0,0,.06); color: var(--text); font-weight: 700; font-size: 12px; }
       /* Sound bar prompt */
     .soundbar { position: fixed; left: 50%; transform: translateX(-50%); top: 72px; z-index: 60; display: none; padding: 10px 14px; border-radius: 999px; font-weight: 700; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #1a1a1a; box-shadow: var(--shadow); border: 0; cursor: pointer; }
-  </style>
+    /* Fancy animations */
+    @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .hero h1 { animation: pop .8s cubic-bezier(.16,1,.3,1) both; }
+    .tagline { animation: fadeUp .8s .12s both; }
+    .hero .row { animation: fadeUp .8s .22s both; }
+
+    /* Scroll reveal */
+    [data-reveal] { opacity: 0; transform: translateY(14px) scale(.98); }
+    [data-reveal].on { opacity: 1; transform: none; transition: transform .7s cubic-bezier(.16,1,.3,1), opacity .7s; }
+
+    /* Hero divider wave */
+    .divider { display: block; width: 100%; height: 90px; margin-top: -40px; }
+    .divider path.gold { fill: rgba(237,205,79,.18); }
+
+    /* Button shimmer */
+    .cta { position: relative; overflow: hidden; }
+    .cta.primary::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 80%); transform: skewX(-20deg) translateX(-120%); transition: transform .6s; }
+    .cta.primary:hover::after { transform: skew
 </head>
 <body>
   <!--
@@ -153,8 +171,11 @@
     </div>
     
   </main>
+  <svg class="divider" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,80 C360,140 1080,20 1440,80 L1440,120 L0,120 Z" class="gold"></path>
+  </svg>
 
-  <section id="music">
+  <section id="music" data-reveal>
     <div class="container music">
       <div class="card" style="padding: 18px;">
         <h2>Music</h2>
@@ -167,7 +188,7 @@
     </div>
   </section>
 
-  <section id="story">
+  <section id="story" data-reveal>
     <div class="container card" style="padding: 18px;">
       <h2>Our story</h2>
       <p class="lead">Story coming soon.</p>
@@ -175,7 +196,7 @@
     </div>
   </section>
 
-  <section id="gallery">
+  <section id="gallery" data-reveal>
     <div class="container">
       <h2>Photos</h2>
       <p class="lead">Please stay engaged for some photos.</p>
@@ -191,7 +212,7 @@
     </div>
   </section>
 
-  <section id="registry">
+  <section id="registry" data-reveal>
     <div class="container registry">
       <div class="card box fancy">
         <h2>Registry</h2>
