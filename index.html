@@ -4,7 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Our Wedding Registry</title>
-  <meta name="description" content="A simple wedding site with photos, music, and a direct link to our registry via Venmo." />
+  <meta name="description" content="Edward and Caroline are getting married on their 13 year anniversary. Photos, music, and a simple honeymoon registry." />
+  <meta property="og:title" content="Edward & Caroline — Wedding" />
+  <meta property="og:description" content="We are getting married on our 13 year anniversary. Help us celebrate and, if you like, chip in for the honeymoon." />
+  <meta property="og:image" content="assets/photos/edward-1.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
   <style>
     :root {
       --bg: #f9fafb;
@@ -33,12 +37,7 @@
     .container { width: min(1100px, 92%); margin: 0 auto; }
 
     /* Top nav */
-    .nav {
-      position: sticky; top: 0; z-index: 20;
-      backdrop-filter: blur(8px);
-      background: rgba(255,255,255,.85);
-      border-bottom: 1px solid rgba(0,0,0,.06);
-    }
+    .nav { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(8px); background: rgba(255,255,255,.85); border-bottom: 1px solid rgba(0,0,0,.06); }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
     .brand { font-weight: 700; letter-spacing: .3px; }
     .brand .pill { font-size: 12px; margin-left: 8px; padding: 4px 8px; border-radius: 999px; background: rgba(0,0,0,.06); color: var(--muted); }
@@ -50,15 +49,19 @@
     .hero h1 { font-size: clamp(32px, 6vw, 60px); line-height: 1.08; margin: 0 0 10px; }
     .hero p { color: var(--muted); margin: 6px 0 28px; }
     .tagline { margin: 0 0 8px; font-size: clamp(18px, 2.8vw, 24px); color: var(--muted); text-align: center; }
-    .cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 14px; font-weight: 700; }
+    .cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 14px; font-weight: 700; transition: transform .12s ease, box-shadow .12s ease; }
     .cta.primary { background: linear-gradient(135deg, var(--accent1), var(--accent2)); box-shadow: var(--shadow); }
+    .cta.primary:hover { transform: translateY(-1px); box-shadow: 0 16px 32px rgba(0,0,0,.12); }
     .cta.secondary { background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.10); }
 
     .card { background: var(--card); border: 1px solid rgba(0,0,0,.08); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card.fancy { background: linear-gradient(var(--card), var(--card)) padding-box,
+                  linear-gradient(135deg, var(--accent1), var(--accent2)) border-box; border: 2px solid transparent; }
 
     /* Sections */
     section { padding: 64px 0; }
     section h2 { font-size: clamp(22px, 3vw, 30px); margin: 0 0 18px; }
+    section p.lead { color: var(--muted); margin-top: 0; }
     section p.lead { color: var(--muted); margin-top: 0; }
 
     /* Gallery */
@@ -190,12 +193,11 @@
 
   <section id="registry">
     <div class="container registry">
-      <div class="card box">
+      <div class="card box fancy">
         <h2>Registry</h2>
         <p class="lead">We are not asking for a Type R or a 24 karat gold Furby. If you would like to help with our honeymoon, we would be grateful.</p>
         <div class="row">
           <a id="venmoLink1" class="cta primary" target="_blank" rel="noopener">Contribute to honeymoon</a>
-          <a id="venmoLink2" class="cta secondary" target="_blank" rel="noopener">Open Venmo profile</a>
         </div>
         <div class="spacer"></div>
         <p class="muted">Thank you for the love and support.</p>
@@ -352,6 +354,15 @@
 
     /* Year */
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Confetti burst when contributing
+    function confettiBurst(x, y) {
+      const c = document.createElement('canvas'); c.width = innerWidth; c.height = innerHeight; c.style.position='fixed'; c.style.inset='0'; c.style.pointerEvents='none'; c.style.zIndex='70'; document.body.appendChild(c);
+      const ctx = c.getContext('2d');
+      const pieces = Array.from({length: 80}).map(()=>({x, y, r: 4+Math.random()*6, a: Math.random()*Math.PI, vx: -3+Math.random()*6, vy: -6+Math.random()*-2, g: .15+Math.random()*.15, c: `hsl(${Math.random()*360},85%,60%)`}));
+      let t = 0; function tick(){ ctx.clearRect(0,0,c.width,c.height); pieces.forEach(p=>{ p.vy += p.g; p.x += p.vx; p.y += p.vy; p.a += .08; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillStyle=p.c; ctx.fillRect(-p.r*.6,-p.r*.3,p.r,p.r*.6); ctx.restore(); }); if((t+=16)<900) requestAnimationFrame(tick); else c.remove(); } tick();
+    }
+    ['venmoBtn','venmoLink1'].forEach(id=>{ const el = document.getElementById(id); if(el){ el.addEventListener('click', e=>{ const r = el.getBoundingClientRect(); confettiBurst(r.left+r.width/2, r.top+r.height/2); }); }});
   </script>
 </body>
 </html>
