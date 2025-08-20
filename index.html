@@ -167,7 +167,7 @@
   <main id="home" class="hero container">
     <h1>We are getting married!</h1>
     <h2 class="tagline">About time, huh??</h2>
-    <p class="muted">We started dating in 2012 and never stopped collecting inside jokes. On October 8th, 2025 we are making it official on our 13 year anniversary.</p>
+    <p class="muted">We started dating in 2013 and never stopped collecting inside jokes. On October 8th, 2025 we are making it official on our 13 year anniversary.</p>
     
     <div class="row" role="group" aria-label="Primary actions">
       <a id="venmoBtn" class="cta primary" target="_blank" rel="noopener">Open Registry</a>
@@ -200,12 +200,7 @@
     </div>
   </section>
 
-  <section id="since" data-reveal>
-    <div class="container card" style="padding: 18px;">
-      <h2>Since 2013</h2>
-      <p>We have been dating since 2013, when we were both 15. It's been almost 12 years now and we're still glued to the hip. We've gone through everything together - grown up together, have spent years watching each other mature and develop into actual adult human beings together. It's time to start a new adventure, and we'd love for you to celebrate with us Here's some pictures to prove we aren't frauds:</p>
-    </div>
-  </section>
+
   
   <section id="gallery" data-reveal>
     <div class="container">
@@ -270,9 +265,12 @@
       Playlist. Add more tracks as needed.
       Files should be placed in /assets/music
     */
+
   const PLAYLIST = [
-    { title: "Yellow", file: "assets/music/yellow.mp3", length: "4:29" },
-    { title: "Froggy", file: "assets/music/froggy.mp3" }
+    { title: "Yellow",  file: "assets/music/yellow.mp3", },
+    { title: "Froggy",  file: "assets/music/froggy.mp3" },
+    { title: "Crayfrog", file: "assets/music/crayfrog.mp3" },
+    { title: "Scatman",  file: "assets/music/scatman.mp3" }
   ];
     /* Wire up Venmo links */
     const venmoUrl = VENMO_HANDLE ? `https://venmo.com/u/${VENMO_HANDLE}` : null;
