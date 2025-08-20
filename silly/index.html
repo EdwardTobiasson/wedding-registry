@@ -3,168 +3,518 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>totally normal page</title>
-  <meta name="description" content="Definitely not a silly page. Do not click." />
+  <title>Our Wedding Registry</title>
+  <meta name="description" content="Edward and Caroline are getting married on their 13 year anniversary. Photos, music, and a simple honeymoon registry." />
+  <meta property="og:title" content="Edward & Caroline — Wedding" />
+  <meta property="og:description" content="We are getting married on our 13 year anniversary. Help us celebrate and, if you like, chip in for the honeymoon." />
+  <meta property="og:image" content="assets/photos/edward-1.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
   <style>
-    :root{
-      --bg1:#ffecd1; --bg2:#ffd6e0; --bg3:#d0f4de; --bg4:#c9c9ff; --ink:#222; --ink2:#fff;
-      --a1:#ff4d6d; --a2:#f9c74f; --a3:#43aa8b; --a4:#577590; --a5:#f9844a;
+    :root {
+      --bg: #f9fafb;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #667085;
+      --accent1: #EDCD4F;
+      --accent2: #49C0B3;
+      --accent3: #8FB26F;
+      --radius: 16px;
+      --shadow: 0 20px 40px rgba(0,0,0,.08);
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color:var(--ink);
-      background: linear-gradient(120deg,var(--bg1),var(--bg2),var(--bg3),var(--bg4));
-      background-size: 300% 300%;
-      animation: wash 12s ease-in-out infinite;
-      overflow-x:hidden;
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+      color: var(--text);
+      background: radial-gradient(1100px 700px at 10% -20%, rgba(237,205,79,.25), transparent 60%),
+                  radial-gradient(900px 800px at 90% 10%, rgba(73,192,179,.25), transparent 60%),
+                  var(--bg);
+      line-height: 1.6;
     }
-    @keyframes wash{ 0%{background-position:0 50%} 50%{background-position:100% 50%} 100%{background-position:0 50%} }
+    a { color: inherit; text-decoration: none; }
 
-    .wrap{ min-height:100%; display:grid; place-items:center; padding:40px; }
-    .card{
-      background: rgba(255,255,255,.9);
-      border: 2px solid rgba(0,0,0,.08);
-      border-radius: 24px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.15);
-      padding: 28px; text-align:center; max-width: 920px; width: min(92%, 920px);
-      position: relative; overflow:hidden;
-    }
-    h1{font-size:clamp(28px,6vw,56px); margin:0 0 6px}
-    p.lead{margin:0 0 18px; color:#444}
-    .nose{ width:120px; height:120px; border-radius:999px; background: radial-gradient(circle at 40% 35%, #ff9aa2, #ff1654 60%);
-      margin:12px auto; box-shadow: inset 0 -10px 20px rgba(0,0,0,.15), 0 10px 30px rgba(0,0,0,.2);
-      animation: bob 2.4s ease-in-out infinite; cursor:pointer; }
-    @keyframes bob { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-6px) } }
-    .btn{
-      display:inline-block; padding:14px 18px; border-radius:14px; font-weight:800; letter-spacing:.3px;
-      background: linear-gradient(135deg,var(--a1),var(--a2)); color:var(--ink2); text-decoration:none; border:0; cursor:pointer;
-      box-shadow: 0 14px 30px rgba(0,0,0,.18);
-    }
-    .btn:active{ transform: translateY(1px) }
-    .row{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
-    .tiny{font-size:12px; color:#555; text-decoration:underline}
-    canvas.confetti{ position:fixed; inset:0; pointer-events:none; z-index:0 }
+    .container { width: min(1100px, 92%); margin: 0 auto; }
+
+    /* Top nav */
+    .nav { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(8px); background: rgba(255,255,255,.85); border-bottom: 1px solid rgba(0,0,0,.06); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+    .brand { font-weight: 700; letter-spacing: .3px; }
+    .brand .pill { font-size: 12px; margin-left: 8px; padding: 4px 8px; border-radius: 999px; background: rgba(0,0,0,.06); color: var(--muted); }
+    .nav a { padding: 8px 10px; border-radius: 8px; color: var(--muted); font-weight: 600; }
+    .nav a:hover { color: var(--text); background: rgba(0,0,0,.06); }
+
+    /* Hero */
+    .hero { position: relative; padding: 96px 0 72px; text-align: center; }
+    .hero h1 { font-size: clamp(32px, 6vw, 60px); line-height: 1.08; margin: 0 0 10px; }
+    .hero p { color: var(--muted); margin: 6px 0 28px; }
+    .tagline { margin: 0 0 8px; font-size: clamp(18px, 2.8vw, 24px); color: var(--muted); text-align: center; }
+    .cta { display: inline-flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 14px; font-weight: 700; transition: transform .12s ease, box-shadow .12s ease; }
+    .cta.primary { background: linear-gradient(135deg, var(--accent1), var(--accent2)); box-shadow: var(--shadow); }
+    .cta.primary:hover { transform: translateY(-1px); box-shadow: 0 16px 32px rgba(0,0,0,.12); }
+    .cta.secondary { background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.10); }
+
+    .card { background: var(--card); border: 1px solid rgba(0,0,0,.08); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card.fancy { background: linear-gradient(var(--card), var(--card)) padding-box,
+                  linear-gradient(135deg, var(--accent1), var(--accent2)) border-box; border: 2px solid transparent; }
+
+    /* Sections */
+    section { padding: 64px 0; }
+    section h2 { font-size: clamp(22px, 3vw, 30px); margin: 0 0 18px; }
+    section p.lead { color: var(--muted); margin-top: 0; }
+    section p.lead { color: var(--muted); margin-top: 0; }
 
     /* Gallery */
-    .media { position: relative; margin-top: 16px; }
-    .gallery { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
-    @media (max-width: 1000px) { .gallery { grid-template-columns: repeat(4, 1fr); } }
-    @media (max-width: 700px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
-    .gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; border: 2px solid rgba(0,0,0,.08); cursor: zoom-in;
-      transition: transform .25s, box-shadow .25s; }
-    .gallery img:hover { transform: perspective(900px) rotateX(2deg) rotateY(-2deg) scale(1.02); box-shadow: 0 14px 30px rgba(0,0,0,.18); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
+    .gallery-grid img { width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 12px; cursor: zoom-in; border: 1px solid rgba(0,0,0,.08); aspect-ratio: 4 / 3; max-height: 420px; }
+    .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 4; }
+    .col-8 { grid-column: span 8; }
+    @media (max-width: 800px) {
+      .col-6, .col-4, .col-8 { grid-column: span 12; }
+    }
+
+    /* Registry */
+    .registry { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; align-items: center; }
+    .registry .box { padding: 18px; }
+    .registry .qr { text-align: center; padding: 18px; }
+    .registry .qr img { max-width: 220px; width: 100%; border-radius: 12px; border: 1px solid rgba(0,0,0,.08); }
+    @media (max-width: 900px) { .registry { grid-template-columns: 1fr; } }
+
+    /* Music */
+    .music { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+    @media (max-width: 900px) { .music { grid-template-columns: 1fr; } }
+    .tracklist { list-style: none; padding: 0; margin: 0; }
+    .tracklist li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 12px; background: rgba(0,0,0,.035); border: 1px solid rgba(0,0,0,.08); margin-bottom: 10px; }
+    .track-controls button { appearance: none; border: 0; padding: 8px 10px; border-radius: 10px; background: rgba(0,0,0,.10); color: var(--text); font-weight: 700; cursor: pointer; }
+    .track-controls button:hover { background: rgba(0,0,0,.09); }
+
+    /* Lightbox */
+    .lightbox { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.7); z-index: 50; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 92vw; max-height: 86vh; border-radius: 12px; box-shadow: var(--shadow); }
+
+    /* Footer */
+    footer { padding: 40px 0 60px; color: var(--muted); text-align: center; }
+
+    /* Utility */
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .muted { color: var(--muted); }
+    .spacer { height: 8px; }
+    .badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .badge { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: rgba(0,0,0,.06); color: var(--text); font-weight: 700; font-size: 12px; }
+      /* Sound bar prompt */
+    .soundbar { position: fixed; left: 50%; transform: translateX(-50%); top: 72px; z-index: 60; display: none; padding: 10px 14px; border-radius: 999px; font-weight: 700; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #1a1a1a; box-shadow: var(--shadow); border: 0; cursor: pointer; }
+    /* Fancy animations */
+    @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: none; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .hero h1 { animation: pop .8s cubic-bezier(.16,1,.3,1) both; }
+    .tagline { animation: fadeUp .8s .12s both; }
+    .hero .row { animation: fadeUp .8s .22s both; }
+
+    /* Scroll reveal */
+    [data-reveal] { opacity: 0; transform: translateY(14px) scale(.98); }
+    [data-reveal].on { opacity: 1; transform: none; transition: transform .7s cubic-bezier(.16,1,.3,1), opacity .7s; }
+
+    /* Hero divider wave */
+    .divider { display: block; width: 100%; height: 90px; margin-top: -40px; }
+    .divider path.gold { fill: rgba(237,205,79,.18); }
+
+    /* Button shimmer */
+    .cta { position: relative; overflow: hidden; }
+    .cta.primary::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 80%); transform: skewX(-20deg) translateX(-120%); transition: transform .6s; }
+    .cta.primary:hover::after { transform: skewX(-20deg) translateX(120%); }
+
+    /* Gallery hover */
+    .gallery-grid img { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
+    .gallery-grid img:hover { transform: scale(1.02); box-shadow: var(--shadow); }
+  /* Gallery for silly page */
+    .media { position: relative; }
+    .gallery { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+    @media (max-width: 1100px) { .gallery { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 800px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+    .gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; border: 2px solid rgba(0,0,0,.08); transition: transform .25s, box-shadow .25s; }
+    .gallery img:hover { transform: perspective(800px) rotateX(2deg) rotateY(-2deg) scale(1.02); box-shadow: 0 14px 30px rgba(0,0,0,.18); }
     @keyframes wiggle { 0%{transform:rotate(0)}25%{transform:rotate(2deg) scale(1.02)}50%{transform:rotate(-2deg) scale(1.02)}100%{transform:rotate(0)} }
     .gallery img.wiggle { animation: wiggle .6s ease-in-out; }
 
-    /* Lightbox */
-    .lightbox { position: fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,.7); z-index: 20; }
-    .lightbox.open { display:flex; }
-    .lightbox img { max-width: 92vw; max-height: 88vh; border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
-
-    /* Tiny equalizer for jam */
-    .eq { display:flex; gap:6px; justify-content:center; align-items:flex-end; height:28px; margin: 8px 0 0; opacity:.55 }
-    .eq span { width:6px; background: linear-gradient(180deg, var(--a1), var(--a2)); height:8px; border-radius:2px; transform-origin: bottom; }
+    /* Equalizer bars */
+    .eq { display:flex; gap:6px; justify-content:center; align-items:flex-end; height:28px; margin: 8px 0 4px; opacity:.5 }
+    .eq span { width:6px; background: linear-gradient(180deg, var(--a1,#ff4d6d), var(--a2,#f9c74f)); height:8px; border-radius:2px; transform-origin: bottom; }
     .eq.playing span:nth-child(1){ animation: eq 700ms infinite }
     .eq.playing span:nth-child(2){ animation: eq 550ms infinite }
     .eq.playing span:nth-child(3){ animation: eq 650ms infinite }
     .eq.playing span:nth-child(4){ animation: eq 500ms infinite }
     .eq.playing span:nth-child(5){ animation: eq 800ms infinite }
     @keyframes eq { 0%{height:6px} 50%{height:26px} 100%{height:6px} }
-  </style>
+  /* Silly gallery and jam */
+    .media { position: relative; }
+    .gallery { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+    @media (max-width: 1100px) { .gallery { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 800px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+    .gallery img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; border: 2px solid rgba(0,0,0,.08); transition: transform .25s, box-shadow .25s; cursor: pointer; }
+    .gallery img:hover { transform: perspective(800px) rotateX(2deg) rotateY(-2deg) scale(1.02); box-shadow: 0 14px 30px rgba(0,0,0,.18); }
+    @keyframes wiggle { 0%{transform:rotate(0)}25%{transform:rotate(2deg) scale(1.02)}50%{transform:rotate(-2deg) scale(1.02)}100%{transform:rotate(0)} }
+    .gallery img.wiggle { animation: wiggle .6s ease-in-out; }
+
+    /* Equalizer bars */
+    .eq { display:flex; gap:6px; justify-content:center; align-items:flex-end; height:28px; margin: 8px 0 4px; opacity:.55 }
+    .eq span { width:6px; background: linear-gradient(180deg, var(--a1,#ff4d6d), var(--a2,#f9c74f)); height:8px; border-radius:2px; transform-origin: bottom; }
+    .eq.playing span:nth-child(1){ animation: eq 700ms infinite }
+    .eq.playing span:nth-child(2){ animation: eq 550ms infinite }
+    .eq.playing span:nth-child(3){ animation: eq 650ms infinite }
+    .eq.playing span:nth-child(4){ animation: eq 500ms infinite }
+    .eq.playing span:nth-child(5){ animation: eq 800ms infinite }
+    @keyframes eq { 0%{height:6px} 50%{height:26px} 100%{height:6px} }
+</style>
 </head>
 <body>
-  <!-- Files to add for this page only:
-       silly/img/funny-1.jpg ... funny-6.jpg   (JPG or PNG)
-       silly/music/silly-song.mp3             (optional)
+  <!--
+    Welcome. This single file site is ready for GitHub Pages.
+
+    What to customize
+    1. Set your Venmo handle below in the script: const VENMO_HANDLE = "yourhandle".
+       That will wire the big button and the small links to https://venmo.com/u/yourhandle
+    2. Replace gallery image sources with your actual files placed in ./assets/photos
+    3. Replace the optional QR image at ./assets/venmo-qr.jpg
+       You can export a QR from the Venmo app and drop it in the assets folder
+    4. Put your audio files in ./assets/music and update the playlist array in the script
+    5. Update names, date, and any copy in the HTML
+
+    File structure suggestion
+    /index.html
+    /assets/photos/your-photos.jpg
+    /assets/music/track1.mp3
+    /assets/venmo-qr.jpg
   -->
-  <canvas class="confetti" id="confetti"></canvas>
 
-  <div class="wrap">
-    <div class="card">
-      <h1>Welcome to the not secret page</h1>
-      <p class="lead">Absolutely ordinary page. Nothing silly at all. Please do not press the nose.</p>
-      <div id="nose" class="nose" title="Definitely not a button"></div>
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="brand">Edward & Caroline <span class="pill">October 8th, 2025</span></div>
+      <nav class="row" aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#story">Story</a>
+        <a href="#music">Music</a>
+        <a href="#gallery">Photos</a>
+        <a href="#registry">Registry</a>
+        
+      </nav>
+    </div>
+  </header>
 
-      <div class="row" style="margin-top: 8px;">
-        <button id="honk" class="btn">Honk</button>
-        <button id="playjam" class="btn" style="background:linear-gradient(135deg,var(--a3),var(--a5))">Play jam</button>
-        <a href="../" class="tiny">back to the nice site</a>
+  <main id="home" class="hero container">
+    <h1>We are getting married!</h1>
+    <h2 class="tagline">About time, huh??</h2>
+    <p class="muted">We started dating in 2012 and never stopped collecting inside jokes. On October 8th, 2025 we are making it official on our 13 year anniversary.</p>
+    
+    <div class="row" role="group" aria-label="Primary actions">
+      <a id="venmoBtn" class="cta primary" target="_blank" rel="noopener">Open Registry</a>
+      <a href="#story" class="cta secondary">Our story</a>
+      <a id="playHero" href="#music" class="cta secondary">Play music</a>
+    </div>
+    
+  </main>
+  <svg class="divider" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,80 C360,140 1080,20 1440,80 L1440,120 L0,120 Z" class="gold"></path>
+  </svg>
+
+  <section id="music" data-reveal>
+    <div class="container music">
+      <div class="card" style="padding: 18px;">
+        <h2>Music</h2>
+        <p class="lead">A few songs that feel like us. Click a track to play.</p>
+        <audio id="player" preload="metadata" controls playsinline style="width: 100%; margin: 8px 0 10px;"></audio>
+        <button id="playAuto" class="cta secondary" style="margin-top: 6px;">Play music</button>
+        <p id="audioStatus" class="muted" style="margin-top: 6px;"></p>
+        <ul id="tracklist" class="tracklist" aria-label="Playlist"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="story" data-reveal>
+    <div class="container card" style="padding: 18px;">
+      <h2>Our Story</h2>
+      <p>We met at Ashbrook High School, all the way back in 2013. There really aren't many ways to describe the things we've been through together. We started dating at 15 and now we're 27. That's a whole lotta years to experience life with one other person, especially considering our brains weren't even fully developed when we met. I mean, we're 27 and I'm still not convinced our brains are fully developed. Granted, I know that they are - I learned that at the nut hut, after all. Anyways. Please come to our wedding party</p>
+    </div>
+  </section>
+
+  <section id="since" data-reveal>
+    <div class="container card" style="padding: 18px;">
+      <h2>Since 2013</h2>
+      <p>We have been dating since 2013, when we were both 15. It's been almost 12 years now and we're still glued to the hip. We've gone through everything together - grown up together, have spent years watching each other mature and develop into actual adult human beings together. It's time to start a new adventure, and we'd love for you to celebrate with us Here's some pictures to prove we aren't frauds:</p>
+    </div>
+  </section>
+  
+  <section id="gallery" data-reveal>
+    <div class="container">
+      <h2>Photos</h2>
+      <p class="lead">Here's some pictures to prove we aren't frauds:</p>
+      <div class="gallery-grid">
+        <img loading="lazy" class="col-8" src="assets/photos/edward-1.jpg" alt="By the stone bridge">
+        <img loading="lazy" class="col-4" src="assets/photos/edward-2.jpg" alt="Looking over the bridge">
+        <img loading="lazy" class="col-4" src="assets/photos/edward-3.jpg" alt="By the fountain">
+        <img loading="lazy" class="col-4" src="assets/photos/edward-4.jpg" alt="By the lake">
+        <img loading="lazy" class="col-8" src="assets/photos/edward-5.jpg" alt="Close by the water">
+        <img loading="lazy" class="col-6" src="assets/photos/edward-6.jpg" alt="Engagement photo">
+        <img loading="lazy" class="col-6" src="assets/photos/edward-7.jpg" alt="Engagement photo">
+      </div>
+    </div>
+  </section>
+
+  <section id="registry" data-reveal>
+    <div class="container registry">
+      <div class="card box fancy">
+        <h2>Registry</h2>
+        <p class="lead">We are not asking for a Type R or a 24 karat gold Furby. If you would like to help with our honeymoon, we would be grateful.</p>
+        <div class="row">
+          <a id="venmoLink1" class="cta primary" target="_blank" rel="noopener">Contribute to honeymoon</a>
+        </div>
+        <div class="spacer"></div>
+        <p class="muted">Thank you for the love and support.</p>
+      </div>
+      <div class="card qr">
+        <p class="muted">Prefer scanning a code</p>
+        <a id="venmoQRLink" href="https://venmo.com/code?user_id=2634431999246336599&created=1755619353" target="_blank" rel="noopener">
+          <img src="assets/venmo-qr.jpg" alt="Venmo QR code for Edward Tobiasson" />
+        </a>
+        <p class="muted" style="margin-top: 8px;">Tap the QR to open Venmo</p>
+      </div>
+    </div>
+  </section>
+
+  
+
+  
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <img alt="Enlarged photo" />
+  </div>
+
+  <button id="soundbar" class="soundbar" aria-label="Play music">Tap to play music</button>
+
+  <footer>
+    <div class="container">Built with love. © <span id="year"></span> <a href="silly/" style="font-size:12px; color: var(--muted); margin-left:12px; text-decoration: underline;">don't click me</a></div>
+  </footer>
+
+    <div class="wrap" style="padding-top:0;">
+    <div class="card media">
+      <h2>bonus content</h2>
+      <p class="lead">five extremely important photos and a tiny jam.</p>
+      <div class="row" style="justify-content:center;">
+        <button id="playjam" class="btn">Play jam</button>
       </div>
       <div id="eq" class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-
-      <div class="media">
-        <div class="gallery" id="gallery">
-          <!-- Drop your images into silly/img/ with these names -->
+      <audio id="jam" src="music/yare%20yare.mp3" preload="metadata"></audio>
+      <div class="gallery">
+        <img src="img/funny-1.jpg" alt="funny photo 1">
+        <img src="img/funny-2.jpg" alt="funny photo 2">
+        <img src="img/funny-3.jpg" alt="funny photo 3">
+        <img src="img/funny-4.jpg" alt="funny photo 4">
+        <img src="img/funny-5.jpg" alt="funny photo 5">
+      </div>
+          <div class="media">
+        <div class="row" style="justify-content:center; margin-top: 12px;">
+          <button id="playjam" class="btn">Play jam</button>
+        </div>
+        <div id="eq" class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <audio id="jam" src="music/yare%20yare.mp3" preload="metadata"></audio>
+        <div class="gallery">
           <img loading="lazy" src="img/funny-1.jpg" alt="funny photo 1">
           <img loading="lazy" src="img/funny-2.jpg" alt="funny photo 2">
           <img loading="lazy" src="img/funny-3.jpg" alt="funny photo 3">
           <img loading="lazy" src="img/funny-4.jpg" alt="funny photo 4">
           <img loading="lazy" src="img/funny-5.jpg" alt="funny photo 5">
-          <img loading="lazy" src="img/funny-6.jpg" alt="funny photo 6">
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
-    <img alt="enlarged funny photo" />
-  </div>
-
-  <!-- Optional local MP3 placed at silly/music/silly-song.mp3 -->
-  <audio id="jam" src="music/silly-song.mp3" preload="metadata"></audio>
-
   <script>
-    // Confetti background
-    const canvas = document.getElementById('confetti');
-    const ctx = canvas.getContext('2d');
-    let W, H; function size(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight } size(); addEventListener('resize', size);
-    const pieces = Array.from({length: 120}).map(()=>({ x: Math.random()*W, y: Math.random()*H, r: 6+Math.random()*10, vx: -1+Math.random()*2, vy: .8+Math.random()*1.5, c: `hsl(${Math.random()*360},85%,65%)`, a: Math.random()*Math.PI }));
-    function tick(){ ctx.clearRect(0,0,W,H); pieces.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.a+=.06; if(p.y>H+20){ p.y=-20; p.x=Math.random()*W } ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillStyle=p.c; ctx.fillRect(-p.r*.6,-p.r*.3,p.r,p.r*.6); ctx.restore(); }); requestAnimationFrame(tick); }
-    tick();
+    /*
+      Quick settings
+      Replace with your actual Venmo handle. Only the handle, not a full URL.
+      Example: const VENMO_HANDLE = "Edward-Tobiasson";
+    */
+    const VENMO_HANDLE = "Edward-Tobiasson";
 
-    // WebAudio honk
-    let ac; function audio(){ if(!ac){ ac = new (window.AudioContext||window.webkitAudioContext)(); } return ac; }
-    function honk(){
-      const A = audio();
-      const now = A.currentTime;
-      const g = A.createGain(); g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.5, now+.02); g.gain.exponentialRampToValueAtTime(0.0001, now+.45);
-      const lp = A.createBiquadFilter(); lp.type='bandpass'; lp.frequency.value = 600; lp.Q.value = 6;
-      const o1 = A.createOscillator(); o1.type='square'; o1.frequency.value = 440; o1.detune.value = -30;
-      const o2 = A.createOscillator(); o2.type='square'; o2.frequency.value = 440; o2.detune.value = 30;
-      o1.connect(lp); o2.connect(lp); lp.connect(g); g.connect(A.destination);
-      o1.start(now); o2.start(now); o1.stop(now+.5); o2.stop(now+.5);
-    }
-    function spin(){ document.querySelector('.card').animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}], {duration:700, easing:'ease-in-out'}); }
+    /*
+      Playlist. Add more tracks as needed.
+      Files should be placed in /assets/music
+    */
+    const PLAYLIST = [
+      { title: "Yellow", file: "assets/music/yellow.mp3", length: "4:29" }
+    ];
 
-    document.getElementById('honk').addEventListener('click', ()=>{ honk(); spin(); });
-    document.getElementById('nose').addEventListener('click', ()=>{ honk(); spin(); });
-    document.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='h'){ honk(); spin(); } });
+    /* Wire up Venmo links */
+    const venmoUrl = VENMO_HANDLE ? `https://venmo.com/u/${VENMO_HANDLE}` : null;
+    const setVenmo = (el) => {
+      if (!el) return;
+      if (venmoUrl) { el.href = venmoUrl; el.textContent = el.textContent || "Open Venmo"; }
+      else { el.href = "#"; el.textContent = "Set your Venmo handle in the script"; el.style.opacity = .8; }
+    };
+    setVenmo(document.getElementById("venmoBtn"));
+    setVenmo(document.getElementById("venmoLink1"));
+    setVenmo(document.getElementById("venmoLink2"));
 
-    // Lightbox
-    const lb = document.getElementById('lightbox');
-    const lbImg = lb.querySelector('img');
-    document.querySelectorAll('.gallery img').forEach(img=>{
-      img.addEventListener('click', ()=>{
+    /* Smooth scroll for in-page links */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+
+    /* Lightbox for gallery */
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = lightbox.querySelector('img');
+    document.querySelectorAll('#gallery img').forEach(img => {
+      img.addEventListener('click', () => {
         lbImg.src = img.src;
-        lb.classList.add('open');
+        lightbox.classList.add('open');
       });
     });
-    lb.addEventListener('click', ()=> lb.classList.remove('open'));
-    document.addEventListener('keydown', e=>{ if(e.key === 'Escape') lb.classList.remove('open'); });
+    lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
 
-    // Jam controls
+    /* Music playlist */
+    const player = document.getElementById('player');
+    const list = document.getElementById('tracklist');
+
+    function renderTracks() {
+      list.innerHTML = '';
+      PLAYLIST.forEach((t, i) => {
+        const li = document.createElement('li');
+        const label = document.createElement('div');
+        label.textContent = `${t.title}`;
+        label.style.fontWeight = '700';
+        const meta = document.createElement('span');
+        meta.textContent = t.length || '';
+        meta.className = 'muted';
+        const controls = document.createElement('div');
+        controls.className = 'track-controls';
+        const btn = document.createElement('button');
+        btn.textContent = 'Play';
+        btn.addEventListener('click', () => playIndex(i));
+        controls.appendChild(btn);
+        li.appendChild(label);
+        li.appendChild(meta);
+        li.appendChild(controls);
+        li.addEventListener('click', (e) => { if (e.target.tagName !== 'BUTTON') playIndex(i); });
+        list.appendChild(li);
+      });
+    }
+
+    function playIndex(i) {
+      const t = PLAYLIST[i];
+      if (!t) return;
+      player.src = t.file;
+      player.play().catch(() => {});
+    }
+
+    renderTracks(); /* keep */
+
+    // Music helpers
+    let musicStarted = false;
+    const ALLOW_KEY = 'allowMusic';
+    function startMusic() {
+      if (musicStarted || !PLAYLIST.length) return;
+      playIndex(0);
+      player.play().then(() => { musicStarted = true; status(""); }).catch(() => { status("Press Play to start music"); });
+    }
+    function status(msg) {
+      const el = document.getElementById('audioStatus');
+      if (el) el.textContent = msg || '';
+    }
+    // Buttons to start
+    const buttons = [document.getElementById('playHero'), document.getElementById('playAuto')].filter(Boolean);
+    buttons.forEach(b => b.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY, '1'); const sb = document.getElementById('soundbar'); if (sb) sb.style.display='none'; }));
+    // Start on first user interaction anywhere
+    function onFirstInteract() { startMusic(); localStorage.setItem(ALLOW_KEY, '1'); document.removeEventListener('click', onFirstInteract); document.removeEventListener('keydown', onFirstInteract); document.removeEventListener('touchstart', onFirstInteract); document.removeEventListener('pointerdown', onFirstInteract); }
+    document.addEventListener('click', onFirstInteract, { once: true });
+    document.addEventListener('keydown', onFirstInteract, { once: true });
+    document.addEventListener('touchstart', onFirstInteract, { once: true });
+    document.addEventListener('pointerdown', onFirstInteract, { once: true });
+    // Show a helpful message if the file cannot be loaded
+    player.addEventListener('error', () => { status(`Could not load the audio file at ${player.src}. Check the filename and path.`); });
+
+    // Soft autoplay on returning visits
+    function softAutoStart() {
+      if (localStorage.getItem(ALLOW_KEY)) {
+        setTimeout(() => { startMusic(); }, 150);
+      } else {
+        const sb = document.getElementById('soundbar');
+        if (sb) sb.style.display = 'inline-flex';
+      }
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', softAutoStart); else softAutoStart();
+
+    // Soundbar button
+    const sb = document.getElementById('soundbar');
+    if (sb) sb.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY,'1'); sb.style.display='none'; }); });
+
+    /* Year */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Confetti burst when contributing
+    function confettiBurst(x, y) {
+      const c = document.createElement('canvas'); c.width = innerWidth; c.height = innerHeight; c.style.position='fixed'; c.style.inset='0'; c.style.pointerEvents='none'; c.style.zIndex='70'; document.body.appendChild(c);
+      const ctx = c.getContext('2d');
+      const pieces = Array.from({length: 80}).map(()=>({x, y, r: 4+Math.random()*6, a: Math.random()*Math.PI, vx: -3+Math.random()*6, vy: -6+Math.random()*-2, g: .15+Math.random()*.15, c: `hsl(${Math.random()*360},85%,60%)`}));
+      let t = 0; function tick(){ ctx.clearRect(0,0,c.width,c.height); pieces.forEach(p=>{ p.vy += p.g; p.x += p.vx; p.y += p.vy; p.a += .08; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillStyle=p.c; ctx.fillRect(-p.r*.6,-p.r*.3,p.r,p.r*.6); ctx.restore(); }); if((t+=16)<900) requestAnimationFrame(tick); else c.remove(); } tick();
+    }
+    ['venmoBtn','venmoLink1'].forEach(id=>{ const el = document.getElementById(id); if(el){ el.addEventListener('click', e=>{ const r = el.getBoundingClientRect(); confettiBurst(r.left+r.width/2, r.top+r.height/2); }); }});
+    // Scroll reveal observer
+  (function(){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('[data-reveal]').forEach(el=> io.observe(el));
+  })();
+  // Silly jam controls
+  (function(){
     const jam = document.getElementById('jam');
     const eq = document.getElementById('eq');
-    const playBtn = document.getElementById('playjam');
-    let wig = null;
+    const btn = document.getElementById('playjam');
+    let wig;
+    function startWiggle(){
+      if (wig) return; 
+      wig = setInterval(()=>{
+        const pics = Array.from(document.querySelectorAll('.gallery img'));
+        if (!pics.length) return;
+        const i = Math.floor(Math.random()*pics.length);
+        pics[i].classList.add('wiggle');
+        setTimeout(()=>pics[i].classList.remove('wiggle'), 500);
+      }, 800);
+    }
+    function stopWiggle(){ clearInterval(wig); wig = null; }
+    function toggle(){
+      if (jam.paused) {
+        jam.play().catch(()=>{});
+        eq.classList.add('playing');
+        btn.textContent = 'Pause jam';
+        startWiggle();
+      } else {
+        jam.pause();
+        eq.classList.remove('playing');
+        btn.textContent = 'Play jam';
+        stopWiggle();
+      }
+    }
+    if (btn) btn.addEventListener('click', toggle);
+  })();
+  // Silly jam controls and photo wiggles
+  (function(){
+    const jam = document.getElementById('jam');
+    const eq = document.getElementById('eq');
+    const btn = document.getElementById('playjam');
 
-    function startJam(){
+    function start(){
       jam.play().then(()=>{
         eq.classList.add('playing');
-        playBtn.textContent = 'Pause jam';
+        btn.textContent = 'Pause jam';
         if (!wig) wig = setInterval(()=>{
           const pics = Array.from(document.querySelectorAll('.gallery img'));
           if (!pics.length) return;
@@ -172,15 +522,18 @@
           pics[i].classList.add('wiggle');
           setTimeout(()=>pics[i].classList.remove('wiggle'), 500);
         }, 800);
-      }).catch(()=>{ /* if file missing, just do nothing */ });
+      }).catch(()=>{});
     }
-    function stopJam(){
-      jam.pause();
-      eq.classList.remove('playing');
-      playBtn.textContent = 'Play jam';
-      if (wig) { clearInterval(wig); wig = null; }
-    }
-    playBtn.addEventListener('click', ()=> jam.paused ? startJam() : stopJam());
-  </script>
+    function stop(){ jam.pause(); eq.classList.remove('playing'); btn.textContent = 'Play jam'; if (wig) { clearInterval(wig); wig = null; } }
+
+    let wig = null;
+    if (btn) btn.addEventListener('click', ()=>{ jam.paused ? start() : stop(); });
+
+    // Click any photo to honk and spin the card
+    document.querySelectorAll('.gallery img').forEach(img=>{
+      img.addEventListener('click', ()=>{ honk(); spin(); });
+    });
+  })();
+</script>
 </body>
 </html>
