@@ -34,6 +34,7 @@
       line-height: 1.6;
     }
     a { color: inherit; text-decoration: none; }
+
     .container { width: min(1100px, 92%); margin: 0 auto; }
 
     /* Top nav */
@@ -99,25 +100,6 @@
     .row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
     .muted { color: var(--muted); }
     .spacer { height: 8px; }
-
-    /* Divider wave */
-    .divider { display: block; width: 100%; height: 90px; margin-top: -40px; }
-    .divider path.gold { fill: rgba(237,205,79,.18); }
-
-    /* Button shimmer */
-    .cta { position: relative; overflow: hidden; }
-    .cta.primary::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 80%); transform: skewX(-20deg) translateX(-120%); transition: transform .6s; }
-    .cta.primary:hover::after { transform: skewX(-20deg) translateX(120%); }
-
-    /* Gallery hover */
-    .gallery-grid img { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
-    .gallery-grid img:hover { transform: scale(1.02); box-shadow: var(--shadow); }
-
-    /* Countdown */
-    .countdown{ display:inline-grid; grid-auto-flow:column; gap:10px; margin:12px 0 8px; }
-    .countdown div{ background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.10); border-radius: 12px; padding: 10px 12px; min-width: 84px; text-align:center; box-shadow: var(--shadow); }
-    .countdown span{ display:block; font-size: clamp(20px, 5vw, 36px); font-weight: 800; line-height: 1; }
-    .countdown small{ color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 700; font-size: 11px; }
   </style>
 </head>
 <body>
@@ -135,19 +117,8 @@
   </header>
 
   <main id="home" class="hero container">
-    <h1>We are getting married</h1>
-    <h2 class="tagline">About time, huh</h2>
     <h1>We are getting married!</h1>
-    <h2 class="tagline">About time, huh?</h2>
-
-    <!-- Countdown -->
-    <div id="countdown" class="countdown" aria-label="Countdown to Oct 8, 2025">
-      <div><span id="cd-days">0</span><small>days</small></div>
-      <div><span id="cd-hours">00</span><small>hours</small></div>
-      <div><span id="cd-mins">00</span><small>minutes</small></div>
-      <div><span id="cd-secs">00</span><small>seconds</small></div>
-    </div>
-
+    <h2 class="tagline">About time, huh??</h2>
     <p class="muted">We started dating in 2013 and never stopped collecting inside jokes. On October 8th, 2025 we are making it official on our 13 year anniversary.</p>
 
     <div class="row" role="group" aria-label="Primary actions">
@@ -177,16 +148,14 @@
   <section id="story" data-reveal>
     <div class="container card" style="padding: 18px;">
       <h2>Our Story</h2>
-      <p>We met at Ashbrook High School, all the way back in 2013. There really aren't many ways to describe the things we've been through together. We started dating at 15 and now we're 27. That's a whole lotta years to experience life with one other person, especially considering our brains weren't even fully developed when we met. I mean, we're 27 and I'm still not convinced our brains are fully developed. Granted, I know that they are - I learned that at the nut hut, after all.</p>
+      <p>We met at Ashbrook High School, all the way back in 2013. There really aren't many ways to describe the things we've been through together. We started dating at 15 and now we're 27. That's a lot of years to experience life with one other person, especially considering our brains weren't even fully developed when we met. I mean, we're 27 and I'm still not convinced our brains are fully developed. Granted, I know that they are - I learned that at the nut hut, after all.</p>
     </div>
   </section>
 
   <section id="gallery" data-reveal>
     <div class="container">
       <h2>Photos</h2>
-      <p class="lead">
-        We have been dating since 2013, when we were both 15. It's been almost 12 years now and we're still glued to the hip. We've gone through everything together, grown up together, and spent years watching each other mature and develop into actual adult human beings together. It's time to start a new adventure, and we'd love for you to celebrate with us.
-      </p>
+      <p class="lead">Here's some pictures to prove we aren't frauds:</p>
       <div class="gallery-grid" id="photoGrid">
         <img loading="lazy" class="col-8" src="assets/photos/edward-1.jpg" alt="By the stone bridge">
         <img loading="lazy" class="col-4" src="assets/photos/edward-2.jpg" alt="Looking over the bridge">
@@ -238,7 +207,6 @@
       { title: "Yellow", file: "assets/music/yellow.mp3" },
       { title: "Froggy Went A Courtin'", file: "assets/music/froggy.mp3" },
       { title: "Crazyfrog", file: "assets/music/crazyfrog.mp3" },
-      { title: "Crazy Frog", file: "assets/music/crazyfrog.mp3" },
       { title: "Scatman", file: "assets/music/scatman.mp3" }
     ];
 
@@ -248,7 +216,7 @@
     setVenmo(document.getElementById("venmoBtn"));
     setVenmo(document.getElementById("venmoLink1"));
 
-    /* Smooth scroll for in-page links */
+    /* Smooth scroll */
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const id = a.getAttribute('href').slice(1);
@@ -257,7 +225,7 @@
       });
     });
 
-    /* Lightbox for gallery */
+    /* Lightbox */
     const lightbox = document.getElementById('lightbox');
     const lbImg = lightbox.querySelector('img');
     document.querySelectorAll('#photoGrid img').forEach(img => {
@@ -269,8 +237,6 @@
     /* Music playlist */
     const player = document.getElementById('player');
     const list = document.getElementById('tracklist');
-
-    // Set an initial src so the native Play button works immediately
     document.addEventListener('DOMContentLoaded', () => {
       if (PLAYLIST.length && player) player.src = PLAYLIST[0].file;
     });
@@ -318,10 +284,12 @@
       player.play().then(() => { musicStarted = true; status(''); }).catch(() => { status('Press Play to start music'); });
     }
     const buttons = [document.getElementById('playHero'), document.getElementById('playAuto')].filter(Boolean);
-    buttons.forEach(b => b.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY, '1'); const sb = document.getElementById('soundbar'); if (sb) sb.style.display='none'; }));
-
-    // Start on first user interaction anywhere
-    function onFirstInteract() { startMusic(); localStorage.setItem(ALLOW_KEY, '1');
+    buttons.forEach(b => b.addEventListener('click', () => {
+      startMusic(); localStorage.setItem(ALLOW_KEY, '1');
+      const sb = document.getElementById('soundbar'); if (sb) sb.style.display='none';
+    }));
+    function onFirstInteract() {
+      startMusic(); localStorage.setItem(ALLOW_KEY, '1');
       document.removeEventListener('click', onFirstInteract);
       document.removeEventListener('keydown', onFirstInteract);
       document.removeEventListener('touchstart', onFirstInteract);
@@ -332,14 +300,18 @@
     document.addEventListener('touchstart', onFirstInteract, { once: true });
     document.addEventListener('pointerdown', onFirstInteract, { once: true });
 
-    // Show a helpful message if the file cannot be loaded
     player.addEventListener('error', () => { status(`Could not load the audio file at ${player.src}. Check the filename and path.`); });
 
-    // Soft autoplay on returning visits
-    function softAutoStart() { if (localStorage.getItem(ALLOW_KEY)) setTimeout(() => { startMusic(); }, 150); else { const sb = document.getElementById('soundbar'); if (sb) sb.style.display = 'inline-flex'; } }
+    function softAutoStart() {
+      if (localStorage.getItem(ALLOW_KEY)) {
+        setTimeout(() => { startMusic(); }, 150);
+      } else {
+        const sb = document.getElementById('soundbar');
+        if (sb) sb.style.display = 'inline-flex';
+      }
+    }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', softAutoStart); else softAutoStart();
 
-    // Soundbar button
     const sb = document.getElementById('soundbar');
     if (sb) sb.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY,'1'); sb.style.display='none'; });
 
@@ -367,36 +339,12 @@
       });
     });
 
-    // Scroll reveal observer
+    // Scroll reveal
     (function(){
       const io = new IntersectionObserver((entries)=>{
         entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
       }, { threshold: 0.12 });
       document.querySelectorAll('[data-reveal]').forEach(el=> io.observe(el));
-    })();
-
-    // Countdown to Oct 8, 2025 00:00 ET
-    (function(){
-      const target = new Date('2025-10-08T00:00:00-04:00').getTime();
-      const $d = document.getElementById('cd-days');
-      const $h = document.getElementById('cd-hours');
-      const $m = document.getElementById('cd-mins');
-      const $s = document.getElementById('cd-secs');
-      const pad = n => String(n).padStart(2,'0');
-      function tick(){
-        const now = Date.now();
-        let diff = Math.max(0, target - now);
-        const days  = Math.floor(diff / 86400000); diff -= days  * 86400000;
-        const hours = Math.floor(diff / 3600000);  diff -= hours * 3600000;
-        const mins  = Math.floor(diff / 60000);    diff -= mins  * 60000;
-        const secs  = Math.floor(diff / 1000);
-        if ($d) $d.textContent = days;
-        if ($h) $h.textContent = pad(hours);
-        if ($m) $m.textContent = pad(mins);
-        if ($s) $s.textContent = pad(secs);
-      }
-      tick();
-      setInterval(tick, 1000);
     })();
   </script>
 </body>
