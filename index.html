@@ -46,7 +46,6 @@
 
     /* Hero */
     .hero { position: relative; padding: 96px 0 72px; text-align: center; overflow: hidden; }
-    .hero h1 { font-size: clamp(32px, 6vw, 60px); line-height: 1.08; margin: 0 0 10px; }
     .hero p { color: var(--muted); margin: 6px 0 28px; }
     .tagline { margin: 0 0 8px; font-size: clamp(18px, 2.8vw, 24px); color: var(--muted); text-align: center; }
 
@@ -145,6 +144,16 @@
       }
     }
 
+    /* Scroll progress bar */
+    .progress{ position: fixed; top:0; left:0; width:100%; height:4px; z-index: 100; }
+    .progress .bar{ width:0%; height:100%; background: linear-gradient(90deg, var(--accent2), var(--accent1)); box-shadow: var(--shadow); }
+
+    /* Staggered hero text */
+    .spl span{ display:inline-block; opacity:0; transform: translateY(12px); }
+    @media (prefers-reduced-motion: no-preference){
+      @keyframes splUp{ to{ opacity:1; transform: translateY(0) } }
+    }
+
     @media (prefers-reduced-motion: reduce){
       .blob{ animation: none }
       .magnetic{ transition: none }
@@ -153,6 +162,9 @@
   </style>
 </head>
 <body>
+  <!-- scroll progress -->
+  <div class="progress" aria-hidden="true"><div class="bar" id="scrollBar"></div></div>
+
   <header class="nav">
     <div class="container nav-inner">
       <div class="brand">Edward & Caroline <span class="pill">October 8th, 2025</span></div>
@@ -174,8 +186,8 @@
       <span class="blob b3"></span>
     </div>
 
-    <h1>We are getting married!</h1>
-    <h2 class="tagline">About time, huh?</h2>
+    <h1 id="heroTitle" class="spl">We are getting married!</h1>
+    <h2 id="heroTag" class="tagline spl">About time, huh?</h2>
 
     <!-- Countdown -->
     <div id="countdown" class="countdown" aria-label="Countdown to Oct 8, 2025">
@@ -218,7 +230,7 @@
   <section id="story" data-reveal>
     <div class="container card" style="padding: 18px;">
       <h2>Our Story</h2>
-      <p>We met at Ashbrook High School, all the way back in 2013. There really aren't many ways to describe the things we've been through together. We started dating at 15 and now we're 27. That's a whole lotta years to experience life with one other person, especially considering our brains weren't even fully developed when we met. I mean, we're 27 and I'm still not convinced our brains are fully developed. Granted, I know that they are - I learned that at the nut hut, after all.</p>
+      <p>We met at Ashbrook High School, all the way back in 2013. There really aren't many ways to describe the things we've been through together. We started dating at 15 and now we're 27. That's a lot of years to experience life with one other person, especially considering our brains weren't even fully developed when we met. I mean, we're 27 and I'm still not convinced our brains are fully developed. Granted, I know that they are - I learned that at the nut hut, after all.</p>
     </div>
   </section>
 
@@ -309,7 +321,6 @@
     /* Music playlist */
     const player = document.getElementById('player');
     const list = document.getElementById('tracklist');
-    // Initial src so the native Play button works
     document.addEventListener('DOMContentLoaded', () => {
       if (PLAYLIST.length && player) player.src = PLAYLIST[0].file;
     });
@@ -362,7 +373,6 @@
       const sb = document.getElementById('soundbar'); if (sb) sb.style.display='none';
     }));
 
-    // Start on first user interaction anywhere
     function onFirstInteract() { startMusic(); localStorage.setItem(ALLOW_KEY, '1');
       document.removeEventListener('click', onFirstInteract);
       document.removeEventListener('keydown', onFirstInteract);
@@ -374,17 +384,14 @@
     document.addEventListener('touchstart', onFirstInteract, { once: true });
     document.addEventListener('pointerdown', onFirstInteract, { once: true });
 
-    // Show a helpful message if the file cannot be loaded
     player.addEventListener('error', () => { status(`Could not load the audio file at ${player.src}. Check the filename and path.`); });
 
-    // Soft autoplay on returning visits
     function softAutoStart() {
       if (localStorage.getItem(ALLOW_KEY)) setTimeout(() => { startMusic(); }, 150);
       else { const sb = document.getElementById('soundbar'); if (sb) sb.style.display = 'inline-flex'; }
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', softAutoStart); else softAutoStart();
 
-    // Soundbar button
     const sb = document.getElementById('soundbar');
     if (sb) sb.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY,'1'); sb.style.display='none'; });
 
@@ -554,6 +561,37 @@
         canvas.height = Math.round(rect.height * dpr);
       }
       addEventListener('resize', resize); resize();
+    })();
+
+    // Scroll progress logic
+    (function(){
+      const bar = document.getElementById('scrollBar');
+      if (!bar) return;
+      function onScroll(){
+        const h = document.documentElement;
+        const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+        bar.style.width = (scrolled * 100).toFixed(2) + '%';
+      }
+      addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+    })();
+
+    // Staggered hero letters
+    (function(){
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      function split(el){
+        if (!el) return;
+        const text = el.textContent;
+        el.textContent = '';
+        [...text].forEach((ch,i)=>{
+          const span = document.createElement('span');
+          span.textContent = ch;
+          span.style.animation = 'splUp .6s '+(i*0.04)+'s cubic-bezier(.2,.8,.2,1) both';
+          el.appendChild(span);
+        });
+      }
+      split(document.getElementById('heroTitle'));
+      split(document.getElementById('heroTag'));
     })();
   </script>
 </body>
