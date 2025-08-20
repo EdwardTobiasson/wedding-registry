@@ -45,7 +45,8 @@
     .nav a:hover { color: var(--text); background: rgba(0,0,0,.06); }
 
     /* Hero */
-    .hero { position: relative; padding: 96px 0 72px; text-align: center; overflow: hidden; }
+    .hero { position: relative; padding: 96px 0 72px; text-align: center; }
+    .hero h1 { font-size: clamp(32px, 6vw, 60px); line-height: 1.08; margin: 0 0 10px; }
     .hero p { color: var(--muted); margin: 6px 0 28px; }
     .tagline { margin: 0 0 8px; font-size: clamp(18px, 2.8vw, 24px); color: var(--muted); text-align: center; }
 
@@ -53,11 +54,6 @@
     .cta.primary { background: linear-gradient(135deg, var(--accent1), var(--accent2)); box-shadow: var(--shadow); }
     .cta.primary:hover { transform: translateY(-1px); box-shadow: 0 16px 32px rgba(0,0,0,.12); }
     .cta.secondary { background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.10); }
-
-    /* Magnetic buttons */
-    @media (prefers-reduced-motion: no-preference){
-      .magnetic{ will-change: transform; transition: transform .08s ease; }
-    }
 
     .card { background: var(--card); border: 1px solid rgba(0,0,0,.08); border-radius: var(--radius); box-shadow: var(--shadow); }
     .card.fancy { background: linear-gradient(var(--card), var(--card)) padding-box,
@@ -122,49 +118,9 @@
     .countdown div{ background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.10); border-radius: 12px; padding: 10px 12px; min-width: 84px; text-align:center; box-shadow: var(--shadow); }
     .countdown span{ display:block; font-size: clamp(20px, 5vw, 36px); font-weight: 800; line-height: 1; }
     .countdown small{ color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 700; font-size: 11px; }
-
-    /* Hero blobs */
-    .blobs{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
-    .blob{
-      position:absolute; width:420px; height:420px; border-radius:50%;
-      filter: blur(24px); opacity:.45;
-      animation: float 14s ease-in-out infinite alternate;
-    }
-    .b1{ left:-120px; top:-80px; background: radial-gradient(circle at 30% 30%, rgba(237,205,79,.8), rgba(237,205,79,0)); }
-    .b2{ right:-140px; top:-40px; background: radial-gradient(circle at 60% 40%, rgba(73,192,179,.8), rgba(73,192,179,0)); animation-duration: 16s; }
-    .b3{ left:30%; bottom:-160px; background: radial-gradient(circle at 40% 60%, rgba(143,178,111,.8), rgba(143,178,111,0)); animation-duration: 18s; }
-    @keyframes float{ from{ transform: translateY(-6px) } to{ transform: translateY(8px) } }
-
-    /* Ken Burns */
-    @media (prefers-reduced-motion: no-preference){
-      .kb{ animation: kenburns 14s ease-in-out infinite alternate; }
-      @keyframes kenburns{
-        0%{ transform: scale(1) translate3d(0,0,0) }
-        100%{ transform: scale(1.06) translate3d(2px,-2px,0) }
-      }
-    }
-
-    /* Scroll progress bar */
-    .progress{ position: fixed; top:0; left:0; width:100%; height:4px; z-index: 100; }
-    .progress .bar{ width:0%; height:100%; background: linear-gradient(90deg, var(--accent2), var(--accent1)); box-shadow: var(--shadow); }
-
-    /* Staggered hero text */
-    .spl span{ display:inline-block; opacity:0; transform: translateY(12px); }
-    @media (prefers-reduced-motion: no-preference){
-      @keyframes splUp{ to{ opacity:1; transform: translateY(0) } }
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      .blob{ animation: none }
-      .magnetic{ transition: none }
-      .kb{ animation: none }
-    }
   </style>
 </head>
 <body>
-  <!-- scroll progress -->
-  <div class="progress" aria-hidden="true"><div class="bar" id="scrollBar"></div></div>
-
   <header class="nav">
     <div class="container nav-inner">
       <div class="brand">Edward & Caroline <span class="pill">October 8th, 2025</span></div>
@@ -179,15 +135,10 @@
   </header>
 
   <main id="home" class="hero container">
-    <!-- soft blobs -->
-    <div class="blobs" aria-hidden="true">
-      <span class="blob b1"></span>
-      <span class="blob b2"></span>
-      <span class="blob b3"></span>
-    </div>
-
-    <h1 id="heroTitle" class="spl">We are getting married!</h1>
-    <h2 id="heroTag" class="tagline spl">About time, huh?</h2>
+    <h1>We are getting married</h1>
+    <h2 class="tagline">About time, huh</h2>
+    <h1>We are getting married!</h1>
+    <h2 class="tagline">About time, huh?</h2>
 
     <!-- Countdown -->
     <div id="countdown" class="countdown" aria-label="Countdown to Oct 8, 2025">
@@ -200,9 +151,9 @@
     <p class="muted">We started dating in 2013 and never stopped collecting inside jokes. On October 8th, 2025 we are making it official on our 13 year anniversary.</p>
 
     <div class="row" role="group" aria-label="Primary actions">
-      <a id="venmoBtn" class="cta primary magnetic" target="_blank" rel="noopener">Open Registry</a>
-      <a href="#story" class="cta secondary magnetic">Our story</a>
-      <a id="playHero" href="#music" class="cta secondary magnetic">Play music</a>
+      <a id="venmoBtn" class="cta primary" target="_blank" rel="noopener">Open Registry</a>
+      <a href="#story" class="cta secondary">Our story</a>
+      <a id="playHero" href="#music" class="cta secondary">Play music</a>
     </div>
   </main>
 
@@ -215,10 +166,6 @@
       <div class="card" style="padding: 18px;">
         <h2>Music</h2>
         <p class="lead">A few songs that feel like us. Click a track to play.</p>
-
-        <!-- visualizer -->
-        <canvas id="viz" width="800" height="64" style="width:100%; height:64px; display:block; border-radius:12px; background:rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.08);"></canvas>
-
         <audio id="player" preload="metadata" controls playsinline style="width: 100%; margin: 8px 0 10px;"></audio>
         <button id="playAuto" class="cta secondary" style="margin-top: 6px;">Play music</button>
         <p id="audioStatus" class="muted" style="margin-top: 6px;"></p>
@@ -230,7 +177,7 @@
   <section id="story" data-reveal>
     <div class="container card" style="padding: 18px;">
       <h2>Our Story</h2>
-      <p>We met at Ashbrook High School, all the way back in 2013. There really aren't many ways to describe the things we've been through together. We started dating at 15 and now we're 27. That's a lot of years to experience life with one other person, especially considering our brains weren't even fully developed when we met. I mean, we're 27 and I'm still not convinced our brains are fully developed. Granted, I know that they are - I learned that at the nut hut, after all.</p>
+      <p>We met at Ashbrook High School, all the way back in 2013. There really aren't many ways to describe the things we've been through together. We started dating at 15 and now we're 27. That's a whole lotta years to experience life with one other person, especially considering our brains weren't even fully developed when we met. I mean, we're 27 and I'm still not convinced our brains are fully developed. Granted, I know that they are - I learned that at the nut hut, after all.</p>
     </div>
   </section>
 
@@ -258,7 +205,7 @@
         <h2>Registry</h2>
         <p class="lead">We are not asking for a Type R or a 24 karat gold Furby. If you would like to help with our honeymoon, we would be grateful.</p>
         <div class="row">
-          <a id="venmoLink1" class="cta primary magnetic" target="_blank" rel="noopener">Contribute to honeymoon</a>
+          <a id="venmoLink1" class="cta primary" target="_blank" rel="noopener">Contribute to honeymoon</a>
         </div>
         <div class="spacer"></div>
         <p class="muted">Thank you for the love and support.</p>
@@ -290,6 +237,7 @@
     const PLAYLIST = [
       { title: "Yellow", file: "assets/music/yellow.mp3" },
       { title: "Froggy Went A Courtin'", file: "assets/music/froggy.mp3" },
+      { title: "Crazyfrog", file: "assets/music/crazyfrog.mp3" },
       { title: "Crazy Frog", file: "assets/music/crazyfrog.mp3" },
       { title: "Scatman", file: "assets/music/scatman.mp3" }
     ];
@@ -321,6 +269,8 @@
     /* Music playlist */
     const player = document.getElementById('player');
     const list = document.getElementById('tracklist');
+
+    // Set an initial src so the native Play button works immediately
     document.addEventListener('DOMContentLoaded', () => {
       if (PLAYLIST.length && player) player.src = PLAYLIST[0].file;
     });
@@ -368,11 +318,9 @@
       player.play().then(() => { musicStarted = true; status(''); }).catch(() => { status('Press Play to start music'); });
     }
     const buttons = [document.getElementById('playHero'), document.getElementById('playAuto')].filter(Boolean);
-    buttons.forEach(b => b.addEventListener('click', () => {
-      startMusic(); localStorage.setItem(ALLOW_KEY, '1');
-      const sb = document.getElementById('soundbar'); if (sb) sb.style.display='none';
-    }));
+    buttons.forEach(b => b.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY, '1'); const sb = document.getElementById('soundbar'); if (sb) sb.style.display='none'; }));
 
+    // Start on first user interaction anywhere
     function onFirstInteract() { startMusic(); localStorage.setItem(ALLOW_KEY, '1');
       document.removeEventListener('click', onFirstInteract);
       document.removeEventListener('keydown', onFirstInteract);
@@ -384,14 +332,14 @@
     document.addEventListener('touchstart', onFirstInteract, { once: true });
     document.addEventListener('pointerdown', onFirstInteract, { once: true });
 
+    // Show a helpful message if the file cannot be loaded
     player.addEventListener('error', () => { status(`Could not load the audio file at ${player.src}. Check the filename and path.`); });
 
-    function softAutoStart() {
-      if (localStorage.getItem(ALLOW_KEY)) setTimeout(() => { startMusic(); }, 150);
-      else { const sb = document.getElementById('soundbar'); if (sb) sb.style.display = 'inline-flex'; }
-    }
+    // Soft autoplay on returning visits
+    function softAutoStart() { if (localStorage.getItem(ALLOW_KEY)) setTimeout(() => { startMusic(); }, 150); else { const sb = document.getElementById('soundbar'); if (sb) sb.style.display = 'inline-flex'; } }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', softAutoStart); else softAutoStart();
 
+    // Soundbar button
     const sb = document.getElementById('soundbar');
     if (sb) sb.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY,'1'); sb.style.display='none'; });
 
@@ -449,149 +397,6 @@
       }
       tick();
       setInterval(tick, 1000);
-    })();
-
-    // Magnetic buttons
-    (function(){
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const btns = document.querySelectorAll('.magnetic');
-      btns.forEach(btn=>{
-        let raf = null;
-        function onMove(e){
-          const r = btn.getBoundingClientRect();
-          const x = e.clientX - (r.left + r.width/2);
-          const y = e.clientY - (r.top + r.height/2);
-          if (raf) cancelAnimationFrame(raf);
-          raf = requestAnimationFrame(()=> btn.style.transform = `translate(${x*0.06}px, ${y*0.06}px)`);
-        }
-        function reset(){ btn.style.transform = 'translate(0,0)'; }
-        btn.addEventListener('mousemove', onMove);
-        btn.addEventListener('mouseleave', reset);
-      });
-    })();
-
-    // Parallax for hero blobs
-    (function(){
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const blobs = document.querySelectorAll('.blob');
-      if (!blobs.length) return;
-      let raf;
-      addEventListener('pointermove', e=>{
-        if (raf) cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(()=>{
-          const cx = innerWidth/2, cy = innerHeight/2;
-          const dx = (e.clientX - cx) / cx;
-          const dy = (e.clientY - cy) / cy;
-          blobs.forEach((el, i)=>{
-            const strength = (i+1)*2.5;
-            el.style.transform = `translate(${dx*strength}px, ${dy*strength}px)`;
-          });
-        });
-      });
-    })();
-
-    // Ken Burns on visible gallery items
-    (function(){
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const imgs = document.querySelectorAll('#photoGrid img');
-      if (!imgs.length) return;
-      const io = new IntersectionObserver(entries=>{
-        entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('kb'); io.unobserve(e.target); } });
-      }, { threshold: 0.4 });
-      imgs.forEach(img=> io.observe(img));
-    })();
-
-    // Simple audio visualizer for #player
-    (function(){
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const audioEl = document.getElementById('player');
-      const canvas = document.getElementById('viz');
-      if (!audioEl || !canvas) return;
-      const ctx = canvas.getContext('2d');
-      let AC, analyser, src, raf;
-
-      function draw(){
-        const W = canvas.width, H = canvas.height;
-        const buf = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(buf);
-        ctx.clearRect(0,0,W,H);
-        const bars = 48;
-        const step = Math.floor(buf.length / bars);
-        for(let i=0;i<bars;i++){
-          const v = buf[i*step] / 255;
-          const h = v * (H-8);
-          const x = i * (W / bars) + 2;
-          const w = (W / bars) - 4;
-          const g = ctx.createLinearGradient(0,0,0,H);
-          g.addColorStop(0, '#49C0B3');
-          g.addColorStop(1, '#EDCD4F');
-          ctx.fillStyle = g;
-          ctx.fillRect(x, H - h - 2, w, h);
-          ctx.fillStyle = 'rgba(0,0,0,.08)';
-          ctx.fillRect(x, H - 2, w, 2);
-        }
-        raf = requestAnimationFrame(draw);
-      }
-
-      function wire(){
-        try{
-          AC = AC || new (window.AudioContext || window.webkitAudioContext)();
-          if (!src) { src = AC.createMediaElementSource(audioEl); }
-          analyser = analyser || AC.createAnalyser();
-          analyser.fftSize = 512;
-          src.connect(analyser);
-          analyser.connect(AC.destination);
-        }catch(e){ /* already wired or not supported */ }
-      }
-
-      audioEl.addEventListener('play', ()=>{
-        wire();
-        if (AC && AC.state === 'suspended') AC.resume();
-        cancelAnimationFrame(raf);
-        draw();
-      });
-      audioEl.addEventListener('pause', ()=> cancelAnimationFrame(raf));
-      audioEl.addEventListener('ended', ()=> cancelAnimationFrame(raf));
-
-      // Keep canvas crisp on HiDPI
-      function resize(){
-        const dpr = devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = Math.round(rect.width * dpr);
-        canvas.height = Math.round(rect.height * dpr);
-      }
-      addEventListener('resize', resize); resize();
-    })();
-
-    // Scroll progress logic
-    (function(){
-      const bar = document.getElementById('scrollBar');
-      if (!bar) return;
-      function onScroll(){
-        const h = document.documentElement;
-        const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
-        bar.style.width = (scrolled * 100).toFixed(2) + '%';
-      }
-      addEventListener('scroll', onScroll, {passive:true});
-      onScroll();
-    })();
-
-    // Staggered hero letters
-    (function(){
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      function split(el){
-        if (!el) return;
-        const text = el.textContent;
-        el.textContent = '';
-        [...text].forEach((ch,i)=>{
-          const span = document.createElement('span');
-          span.textContent = ch;
-          span.style.animation = 'splUp .6s '+(i*0.04)+'s cubic-bezier(.2,.8,.2,1) both';
-          el.appendChild(span);
-        });
-      }
-      split(document.getElementById('heroTitle'));
-      split(document.getElementById('heroTag'));
     })();
   </script>
 </body>
