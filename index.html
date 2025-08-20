@@ -45,7 +45,6 @@
     .nav a:hover { color: var(--text); background: rgba(0,0,0,.06); }
 
     /* Hero */
-    .hero { position: relative; padding: 96px 0 72px; text-align: center; }
     .hero { position: relative; padding: 96px 0 72px; text-align: center; overflow: hidden; }
     .hero h1 { font-size: clamp(32px, 6vw, 60px); line-height: 1.08; margin: 0 0 10px; }
     .hero p { color: var(--muted); margin: 6px 0 28px; }
@@ -175,8 +174,8 @@
       <span class="blob b3"></span>
     </div>
 
-    <h1>We are getting married!</h1>
-    <h2 class="tagline">About time, huh?</h2>
+    <h1>We are getting married</h1>
+    <h2 class="tagline">About time, huh</h2>
 
     <!-- Countdown -->
     <div id="countdown" class="countdown" aria-label="Countdown to Oct 8, 2025">
@@ -189,9 +188,6 @@
     <p class="muted">We started dating in 2013 and never stopped collecting inside jokes. On October 8th, 2025 we are making it official on our 13 year anniversary.</p>
 
     <div class="row" role="group" aria-label="Primary actions">
-      <a id="venmoBtn" class="cta primary" target="_blank" rel="noopener">Open Registry</a>
-      <a href="#story" class="cta secondary">Our story</a>
-      <a id="playHero" href="#music" class="cta secondary">Play music</a>
       <a id="venmoBtn" class="cta primary magnetic" target="_blank" rel="noopener">Open Registry</a>
       <a href="#story" class="cta secondary magnetic">Our story</a>
       <a id="playHero" href="#music" class="cta secondary magnetic">Play music</a>
@@ -250,7 +246,6 @@
         <h2>Registry</h2>
         <p class="lead">We are not asking for a Type R or a 24 karat gold Furby. If you would like to help with our honeymoon, we would be grateful.</p>
         <div class="row">
-          <a id="venmoLink1" class="cta primary" target="_blank" rel="noopener">Contribute to honeymoon</a>
           <a id="venmoLink1" class="cta primary magnetic" target="_blank" rel="noopener">Contribute to honeymoon</a>
         </div>
         <div class="spacer"></div>
@@ -283,7 +278,7 @@
     const PLAYLIST = [
       { title: "Yellow", file: "assets/music/yellow.mp3" },
       { title: "Froggy Went A Courtin'", file: "assets/music/froggy.mp3" },
-      { title: "Crazy Frog", file: "assets/music/crazyfrog.mp3" },
+      { title: "Crazyfrog", file: "assets/music/crazyfrog.mp3" },
       { title: "Scatman", file: "assets/music/scatman.mp3" }
     ];
 
@@ -314,8 +309,6 @@
     /* Music playlist */
     const player = document.getElementById('player');
     const list = document.getElementById('tracklist');
-
-    // Set an initial src so the native Play button works immediately
     // Initial src so the native Play button works
     document.addEventListener('DOMContentLoaded', () => {
       if (PLAYLIST.length && player) player.src = PLAYLIST[0].file;
@@ -364,7 +357,6 @@
       player.play().then(() => { musicStarted = true; status(''); }).catch(() => { status('Press Play to start music'); });
     }
     const buttons = [document.getElementById('playHero'), document.getElementById('playAuto')].filter(Boolean);
-    buttons.forEach(b => b.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY, '1'); const sb = document.getElementById('soundbar'); if (sb) sb.style.display='none'; }));
     buttons.forEach(b => b.addEventListener('click', () => {
       startMusic(); localStorage.setItem(ALLOW_KEY, '1');
       const sb = document.getElementById('soundbar'); if (sb) sb.style.display='none';
@@ -386,7 +378,6 @@
     player.addEventListener('error', () => { status(`Could not load the audio file at ${player.src}. Check the filename and path.`); });
 
     // Soft autoplay on returning visits
-    function softAutoStart() { if (localStorage.getItem(ALLOW_KEY)) setTimeout(() => { startMusic(); }, 150); else { const sb = document.getElementById('soundbar'); if (sb) sb.style.display = 'inline-flex'; } }
     function softAutoStart() {
       if (localStorage.getItem(ALLOW_KEY)) setTimeout(() => { startMusic(); }, 150);
       else { const sb = document.getElementById('soundbar'); if (sb) sb.style.display = 'inline-flex'; }
