@@ -71,11 +71,16 @@
 
     /* Gallery */
     .gallery-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
-    .gallery-grid img { width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 12px; cursor: zoom-in; border: 1px solid rgba(0,0,0,.08); aspect-ratio: 4 / 3; max-height: 420px; }
+    .gallery-grid img { width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 12px; cursor: zoom-in; border: 1px solid rgba(0,0,0,.08); aspect-ratio: 4 / 3; max-height: 420px; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
+    .gallery-grid img:hover { transform: scale(1.02); box-shadow: var(--shadow); }
     .col-6 { grid-column: span 6; }
     .col-4 { grid-column: span 4; }
     .col-8 { grid-column: span 8; }
     @media (max-width: 800px) { .col-6, .col-4, .col-8 { grid-column: span 12; } }
+
+    /* Photo scroll reveal (new) */
+    .ph-in { opacity: 0; transform: translateY(10px) scale(.985); }
+    .ph-on { opacity: 1; transform: none; transition: transform .6s cubic-bezier(.16,1,.3,1), opacity .6s; }
 
     /* Registry */
     .registry { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; align-items: center; }
@@ -113,16 +118,6 @@
     .cta { position: relative; overflow: hidden; }
     .cta.primary::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 80%); transform: skewX(-20deg) translateX(-120%); transition: transform .6s; }
     .cta.primary:hover::after { transform: skewX(-20deg) translateX(120%); }
-
-    /* Gallery hover */
-    .gallery-grid img { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
-    .gallery-grid img:hover { transform: scale(1.02); box-shadow: var(--shadow); }
-
-    /* Countdown */
-    .countdown{ display:inline-grid; grid-auto-flow:column; gap:10px; margin:12px 0 8px; }
-    .countdown div{ background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.10); border-radius: 12px; padding: 10px 12px; min-width: 84px; text-align:center; box-shadow: var(--shadow); }
-    .countdown span{ display:block; font-size: clamp(20px, 5vw, 36px); font-weight: 800; line-height: 1; }
-    .countdown small{ color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 700; font-size: 11px; }
 
     /* Hero blobs */
     .blobs{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
@@ -174,8 +169,8 @@
       <span class="blob b3"></span>
     </div>
 
-    <h1>We are getting married</h1>
-    <h2 class="tagline">About time, huh</h2>
+    <h1>We are getting married!</h1>
+    <h2 class="tagline">About time, huh??</h2>
 
     <!-- Countdown -->
     <div id="countdown" class="countdown" aria-label="Countdown to Oct 8, 2025">
@@ -412,7 +407,7 @@
       });
     });
 
-    // Scroll reveal observer
+    // Scroll reveal observer for sections
     (function(){
       const io = new IntersectionObserver((entries)=>{
         entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
@@ -463,34 +458,28 @@
       });
     })();
 
-    // Parallax for hero blobs
-    (function(){
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const blobs = document.querySelectorAll('.blob');
-      if (!blobs.length) return;
-      let raf;
-      addEventListener('pointermove', e=>{
-        if (raf) cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(()=>{
-          const cx = innerWidth/2, cy = innerHeight/2;
-          const dx = (e.clientX - cx) / cx;
-          const dy = (e.clientY - cy) / cy;
-          blobs.forEach((el, i)=>{
-            const strength = (i+1)*2.5;
-            el.style.transform = `translate(${dx*strength}px, ${dy*strength}px)`;
-          });
-        });
-      });
-    })();
-
-    // Ken Burns on visible gallery items
+    // Ken Burns + new scroll-in reveal for gallery images
     (function(){
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const imgs = document.querySelectorAll('#photoGrid img');
       if (!imgs.length) return;
+
+      // start hidden with a small offset
+      imgs.forEach((img,i)=>{
+        img.classList.add('ph-in');
+        img.style.transitionDelay = `${Math.min(i*40, 240)}ms`;
+      });
+
       const io = new IntersectionObserver(entries=>{
-        entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('kb'); io.unobserve(e.target); } });
-      }, { threshold: 0.4 });
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add('kb','ph-on');   // Ken Burns and fade/slide in
+            e.target.classList.remove('ph-in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.35 });
+
       imgs.forEach(img=> io.observe(img));
     })();
 
