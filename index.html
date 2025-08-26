@@ -55,7 +55,7 @@
     .cta.primary:hover { transform: translateY(-1px); box-shadow: 0 16px 32px rgba(0,0,0,.12); }
     .cta.secondary { background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.10); }
 
-    /* Magnetic buttons (nice subtle hover) */
+    /* Magnetic buttons */
     @media (prefers-reduced-motion: no-preference){
       .magnetic{ will-change: transform; transition: transform .08s ease; }
     }
@@ -71,16 +71,13 @@
 
     /* Gallery */
     .gallery-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
-    .gallery-grid img { width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 12px; cursor: zoom-in; border: 1px solid rgba(0,0,0,.08); aspect-ratio: 4 / 3; max-height: 420px; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
-    .gallery-grid img:hover { transform: scale(1.02); box-shadow: var(--shadow); }
+    /* Updated: use a CSS var for parallax so hover still works */
+    .gallery-grid img { width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 12px; cursor: zoom-in; border: 1px solid rgba(0,0,0,.08); aspect-ratio: 4 / 3; max-height: 420px; transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; transform: translateX(var(--px, 0)); }
+    .gallery-grid img:hover { transform: translateX(var(--px, 0)) scale(1.02); box-shadow: var(--shadow); }
     .col-6 { grid-column: span 6; }
     .col-4 { grid-column: span 4; }
     .col-8 { grid-column: span 8; }
     @media (max-width: 800px) { .col-6, .col-4, .col-8 { grid-column: span 12; } }
-
-    /* Photo scroll reveal (fix) */
-    .ph-in { opacity: 0; transform: translateY(12px) scale(.985); }
-    .ph-on { opacity: 1; transform: none; transition: transform .6s cubic-bezier(.16,1,.3,1), opacity .6s; }
 
     /* Registry */
     .registry { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; align-items: center; }
@@ -119,6 +116,12 @@
     .cta.primary::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 80%); transform: skewX(-20deg) translateX(-120%); transition: transform .6s; }
     .cta.primary:hover::after { transform: skewX(-20deg) translateX(120%); }
 
+    /* Countdown */
+    .countdown{ display:inline-grid; grid-auto-flow:column; gap:10px; margin:12px 0 8px; }
+    .countdown div{ background: rgba(0,0,0,.06); border: 1px solid rgba(0,0,0,.10); border-radius: 12px; padding: 10px 12px; min-width: 84px; text-align:center; box-shadow: var(--shadow); }
+    .countdown span{ display:block; font-size: clamp(20px, 5vw, 36px); font-weight: 800; line-height: 1; }
+    .countdown small{ color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 700; font-size: 11px; }
+
     /* Hero blobs */
     .blobs{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
     .blob{
@@ -145,20 +148,6 @@
       .magnetic{ transition: none }
       .kb{ animation: none }
     }
-
-    /* Countdown (fix) */
-    .countdown{
-      display:flex; gap:12px; justify-content:center; align-items:stretch;
-      margin:12px 0 8px; flex-wrap:wrap;
-    }
-    .countdown .box{
-      background: rgba(255,255,255,.75);
-      border: 1px solid rgba(0,0,0,.10);
-      border-radius: 14px; padding: 10px 14px; min-width: 88px;
-      text-align:center; box-shadow: var(--shadow);
-    }
-    .countdown .num{ display:block; font-size: clamp(22px, 5vw, 40px); font-weight: 800; line-height: 1; }
-    .countdown .label{ display:block; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 700; font-size: 11px; margin-top:2px; }
   </style>
 </head>
 <body>
@@ -182,16 +171,18 @@
       <span class="blob b2"></span>
       <span class="blob b3"></span>
     </div>
+    <!-- new: hearts canvas behind content -->
+    <canvas id="hearts" aria-hidden="true" style="position:absolute;inset:0;z-index:-1;pointer-events:none"></canvas>
 
     <h1>We are getting married!</h1>
     <h2 class="tagline">About time, huh??</h2>
 
-    <!-- Countdown (uses .box/.num/.label for clean layout) -->
+    <!-- Countdown -->
     <div id="countdown" class="countdown" aria-label="Countdown to Oct 8, 2025">
-      <div class="box"><span id="cd-days"  class="num">0</span><span class="label">days</span></div>
-      <div class="box"><span id="cd-hours" class="num">00</span><span class="label">hours</span></div>
-      <div class="box"><span id="cd-mins"  class="num">00</span><span class="label">minutes</span></div>
-      <div class="box"><span id="cd-secs"  class="num">00</span><span class="label">seconds</span></div>
+      <div><span id="cd-days">0</span><small>days</small></div>
+      <div><span id="cd-hours">00</span><small>hours</small></div>
+      <div><span id="cd-mins">00</span><small>minutes</small></div>
+      <div><span id="cd-secs">00</span><small>seconds</small></div>
     </div>
 
     <p class="muted">We started dating in 2013 and never stopped collecting inside jokes. On October 8th, 2025 we are making it official on our 13 year anniversary.</p>
@@ -213,6 +204,7 @@
         <h2>Music</h2>
         <p class="lead">A few songs that feel like us. Click a track to play.</p>
 
+        <!-- visualizer -->
         <canvas id="viz" width="800" height="64" style="width:100%; height:64px; display:block; border-radius:12px; background:rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.08);"></canvas>
 
         <audio id="player" preload="metadata" controls playsinline style="width: 100%; margin: 8px 0 10px;"></audio>
@@ -286,7 +278,7 @@
     const PLAYLIST = [
       { title: "Yellow", file: "assets/music/yellow.mp3" },
       { title: "Froggy Went A Courtin'", file: "assets/music/froggy.mp3" },
-      { title: "Crazy Frog", file: "assets/music/crazyfrog.mp3" },
+      { title: "Crazyfrog", file: "assets/music/crazyfrog.mp3" },
       { title: "Scatman", file: "assets/music/scatman.mp3" }
     ];
 
@@ -296,7 +288,7 @@
     setVenmo(document.getElementById("venmoBtn"));
     setVenmo(document.getElementById("venmoLink1"));
 
-    /* Smooth scroll */
+    /* Smooth scroll for in-page links */
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const id = a.getAttribute('href').slice(1);
@@ -305,7 +297,7 @@
       });
     });
 
-    /* Lightbox */
+    /* Lightbox for gallery */
     const lightbox = document.getElementById('lightbox');
     const lbImg = lightbox.querySelector('img');
     document.querySelectorAll('#photoGrid img').forEach(img => {
@@ -317,9 +309,7 @@
     /* Music playlist */
     const player = document.getElementById('player');
     const list = document.getElementById('tracklist');
-    document.addEventListener('DOMContentLoaded', () => {
-      if (PLAYLIST.length && player) player.src = PLAYLIST[0].file;
-    });
+    document.addEventListener('DOMContentLoaded', () => { if (PLAYLIST.length && player) player.src = PLAYLIST[0].file; });
 
     function renderTracks() {
       list.innerHTML = '';
@@ -344,13 +334,20 @@
         list.appendChild(li);
       });
     }
-    function playIndex(i) { const t = PLAYLIST[i]; if (!t) return; player.src = t.file; player.play().catch(() => {}); }
+    function playIndex(i) {
+      const t = PLAYLIST[i]; if (!t) return;
+      player.src = t.file;
+      player.play().catch(() => {});
+    }
     renderTracks();
 
     // Music helpers
     let musicStarted = false;
     const ALLOW_KEY = 'allowMusic';
-    function status(msg) { const el = document.getElementById('audioStatus'); if (el) el.textContent = msg || ''; }
+    function status(msg) {
+      const el = document.getElementById('audioStatus');
+      if (el) el.textContent = msg || '';
+    }
     function startMusic() {
       if (musicStarted || !PLAYLIST.length) return;
       playIndex(0);
@@ -372,18 +369,18 @@
     document.addEventListener('touchstart', onFirstInteract, { once: true });
     document.addEventListener('pointerdown', onFirstInteract, { once: true });
     player.addEventListener('error', () => { status(`Could not load the audio file at ${player.src}. Check the filename and path.`); });
+
+    // Soft autoplay on returning visits
     function softAutoStart() {
       if (localStorage.getItem(ALLOW_KEY)) setTimeout(() => { startMusic(); }, 150);
       else { const sb = document.getElementById('soundbar'); if (sb) sb.style.display = 'inline-flex'; }
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', softAutoStart); else softAutoStart();
-    const sbBtn = document.getElementById('soundbar');
-    if (sbBtn) sbBtn.addEventListener('click', () => { startMusic(); localStorage.setItem(ALLOW_KEY,'1'); sbBtn.style.display='none'; });
 
-    /* Year */
+    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Confetti burst
+    // Confetti burst when contributing
     function confettiBurst(x, y) {
       const c = document.createElement('canvas'); c.width = innerWidth; c.height = innerHeight; c.style.position='fixed'; c.style.inset='0'; c.style.pointerEvents='none'; c.style.zIndex='70'; document.body.appendChild(c);
       const ctx = c.getContext('2d');
@@ -404,7 +401,7 @@
       });
     });
 
-    // Section reveal (kept)
+    // Scroll reveal observer
     (function(){
       const io = new IntersectionObserver((entries)=>{
         entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
@@ -412,7 +409,7 @@
       document.querySelectorAll('[data-reveal]').forEach(el=> io.observe(el));
     })();
 
-    // Countdown to Oct 8, 2025 00:00 ET (same logic; just outputs into .num spans)
+    // Countdown to Oct 8, 2025 00:00 ET
     (function(){
       const target = new Date('2025-10-08T00:00:00-04:00').getTime();
       const $d = document.getElementById('cd-days');
@@ -427,12 +424,13 @@
         const hours = Math.floor(diff / 3600000);  diff -= hours * 3600000;
         const mins  = Math.floor(diff / 60000);    diff -= mins  * 60000;
         const secs  = Math.floor(diff / 1000);
-        $d.textContent = days;
-        $h.textContent = pad(hours);
-        $m.textContent = pad(mins);
-        $s.textContent = pad(secs);
+        if ($d) $d.textContent = days;
+        if ($h) $h.textContent = pad(hours);
+        if ($m) $m.textContent = pad(mins);
+        if ($s) $s.textContent = pad(secs);
       }
-      tick(); setInterval(tick, 1000);
+      tick();
+      setInterval(tick, 1000);
     })();
 
     // Magnetic buttons
@@ -454,36 +452,81 @@
       });
     })();
 
-    // Gallery scroll reveal + Ken Burns (fix)
+    // Parallax on gallery rows (uses CSS var --px so hover still works)
     (function(){
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const imgs = Array.from(document.querySelectorAll('#photoGrid img'));
-      if (!imgs.length) return;
-
-      // start hidden; small stagger delay
-      imgs.forEach((img,i)=>{
-        img.classList.add('ph-in');
-        img.style.transitionDelay = `${Math.min(i*40, 240)}ms`;
-      });
-
-      if ('IntersectionObserver' in window){
-        const io = new IntersectionObserver(entries=>{
-          entries.forEach(e=>{
-            if(e.isIntersecting){
-              e.target.classList.add('kb','ph-on');
-              e.target.classList.remove('ph-in');
-              io.unobserve(e.target);
-            }
-          });
-        }, { threshold: 0.35 });
-        imgs.forEach(img=> io.observe(img));
-      } else {
-        // no IO support: just show them
-        imgs.forEach(img=> img.classList.add('ph-on'));
+      const grid = document.getElementById('photoGrid');
+      if(!grid) return;
+      let items = Array.from(grid.children);
+      function assignRows(){
+        // map unique top positions to row indices
+        const tops = [...new Set(items.map(el => el.offsetTop))].sort((a,b)=>a-b);
+        const rowOfTop = new Map(tops.map((t,i)=>[t,i]));
+        items.forEach(el => el.dataset.row = rowOfTop.get(el.offsetTop) || 0);
       }
+      function onScroll(){
+        const y = window.scrollY || 0;
+        items.forEach(el=>{
+          const row = parseInt(el.dataset.row || '0', 10);
+          const dir = row % 2 === 0 ? 1 : -1;
+          const offset = Math.sin((y + row * 150) / 600) * 6; // -6..6px
+          el.style.setProperty('--px', `${dir * offset}px`);
+        });
+      }
+      assignRows(); onScroll();
+      addEventListener('resize', ()=>{ items = Array.from(grid.children); assignRows(); onScroll(); });
+      addEventListener('scroll', onScroll, {passive:true});
     })();
 
-    // Simple audio visualizer
+    // Floating hearts background for hero + burst on registry click
+    (function(){
+      const c = document.getElementById('hearts'); if(!c) return;
+      const ctx = c.getContext('2d'); let W,H; const DPR = devicePixelRatio||1;
+      function size(){ W=c.width=Math.round(c.clientWidth*DPR); H=c.height=Math.round(c.clientHeight*DPR); }
+      function style(){ c.style.width='100%'; c.style.height='100%'; } style(); size(); addEventListener('resize', size);
+      const hearts = Array.from({length:24}).map(()=>spawn());
+      function spawn(x=W*Math.random(), y=H+40*Math.random()){
+        const s = 6+Math.random()*10; return {x,y,vx:(Math.random()-.5)*.15, vy:-.3-Math.random()*.25, s, a: Math.random()*Math.PI};
+      }
+      function drawHeart(x,y,s){
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.bezierCurveTo(x, y-3*s, x-2*s, y-3*s, x-2*s, y-s);
+        ctx.bezierCurveTo(x-2*s, y+s, x, y+1.6*s, x, y+2.2*s);
+        ctx.bezierCurveTo(x, y+1.6*s, x+2*s, y+s, x+2*s, y-s);
+        ctx.bezierCurveTo(x+2*s, y-3*s, x, y-3*s, x, y);
+        const g = ctx.createLinearGradient(0,y-2*s,0,y+2*s);
+        g.addColorStop(0,'rgba(73,192,179,.65)'); g.addColorStop(1,'rgba(237,205,79,.65)');
+        ctx.fillStyle=g; ctx.fill();
+      }
+      function tick(){
+        ctx.clearRect(0,0,W,H);
+        hearts.forEach(h=>{
+          h.x += h.vx*DPR; h.y += h.vy*DPR; h.a += .02;
+          ctx.save(); ctx.translate(h.x, h.y); ctx.rotate(Math.sin(h.a)*.1);
+          drawHeart(0,0,h.s*DPR*.2); ctx.restore();
+          if(h.y < -30*DPR) { Object.assign(h, spawn()); }
+        });
+        requestAnimationFrame(tick);
+      } tick();
+      const reg = document.getElementById('venmoBtn');
+      if(reg){ reg.addEventListener('click', ()=>{
+        for(let i=0;i<12;i++) hearts.push(spawn(W/2+(Math.random()-0.5)*60*DPR, H/2));
+        setTimeout(()=> hearts.splice(-12,12), 900);
+      });}
+    })();
+
+    // Ken Burns on visible gallery items
+    (function(){
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const imgs = document.querySelectorAll('#photoGrid img');
+      if (!imgs.length) return;
+      const io = new IntersectionObserver(entries=>{
+        entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('kb'); io.unobserve(e.target); } });
+      }, { threshold: 0.4 });
+      imgs.forEach(img=> io.observe(img));
+    })();
+
+    // Simple audio visualizer for #player
     (function(){
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const audioEl = document.getElementById('player');
@@ -497,13 +540,20 @@
         const buf = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(buf);
         ctx.clearRect(0,0,W,H);
-        const bars = 48, step = Math.floor(buf.length / bars);
+        const bars = 48;
+        const step = Math.floor(buf.length / bars);
         for(let i=0;i<bars;i++){
-          const v = buf[i*step] / 255, h = v * (H-8);
-          const x = i * (W / bars) + 2, w = (W / bars) - 4;
-          const g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0, '#49C0B3'); g.addColorStop(1, '#EDCD4F');
-          ctx.fillStyle = g; ctx.fillRect(x, H - h - 2, w, h);
-          ctx.fillStyle = 'rgba(0,0,0,.08)'; ctx.fillRect(x, H - 2, w, 2);
+          const v = buf[i*step] / 255;
+          const h = v * (H-8);
+          const x = i * (W / bars) + 2;
+          const w = (W / bars) - 4;
+          const g = ctx.createLinearGradient(0,0,0,H);
+          g.addColorStop(0, '#49C0B3');
+          g.addColorStop(1, '#EDCD4F');
+          ctx.fillStyle = g;
+          ctx.fillRect(x, H - h - 2, w, h);
+          ctx.fillStyle = 'rgba(0,0,0,.08)';
+          ctx.fillRect(x, H - 2, w, 2);
         }
         raf = requestAnimationFrame(draw);
       }
@@ -511,18 +561,26 @@
       function wire(){
         try{
           AC = AC || new (window.AudioContext || window.webkitAudioContext)();
-          if (!src) src = AC.createMediaElementSource(audioEl);
+          if (!src) { src = AC.createMediaElementSource(audioEl); }
           analyser = analyser || AC.createAnalyser();
-          analyser.fftSize = 512; src.connect(analyser); analyser.connect(AC.destination);
-        }catch(e){}
+          analyser.fftSize = 512;
+          src.connect(analyser);
+          analyser.connect(AC.destination);
+        }catch(e){ /* already wired or not supported */ }
       }
 
-      audioEl.addEventListener('play', ()=>{ wire(); if (AC && AC.state === 'suspended') AC.resume(); cancelAnimationFrame(raf); draw(); });
+      audioEl.addEventListener('play', ()=>{
+        wire();
+        if (AC && AC.state === 'suspended') AC.resume();
+        cancelAnimationFrame(raf);
+        draw();
+      });
       audioEl.addEventListener('pause', ()=> cancelAnimationFrame(raf));
       audioEl.addEventListener('ended', ()=> cancelAnimationFrame(raf));
 
       function resize(){
-        const dpr = devicePixelRatio || 1, rect = canvas.getBoundingClientRect();
+        const dpr = devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
         canvas.width = Math.round(rect.width * dpr);
         canvas.height = Math.round(rect.height * dpr);
       }
